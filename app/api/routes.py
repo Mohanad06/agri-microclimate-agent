@@ -6,12 +6,14 @@ All three endpoints in Phase 4.1:
   GET  /crops    — supported crop list from the live knowledge base
   POST /analyze  — full agricultural analysis via AgentOrchestrator
 """
+import os
 from typing import List
 
 from fastapi import APIRouter
 
 from agent.orchestrator import AgentOrchestrator
 from app.api.errors import AgentError
+from app.demo_data import build_demo_mock_payload
 from app.schemas.analysis import (
     AnalysisRequest,
     AnalysisResponse,
@@ -61,15 +63,25 @@ def _build_goal_string(req: AnalysisRequest) -> str:
     """Construct a natural-language goal from structured AnalysisRequest fields.
 
     The GoalParser (Phase 3) expects a plain English sentence.  We assemble
-    one deterministically from the structured request fields so the frontend
-    does not need to compose sentences itself.
+    one deterministically from the structured request fields.
 
-    Example:
-        location="Phoenix, AZ", crop="Tomato", crop_stage="flowering",
-        question="Assess heat risk."
-        →  "Assess heat risk. Tomato in Phoenix, AZ during flowering."
+    If the question is explicitly a pure agronomic threshold request or already
+    contains location context, we preserve its natural phrasing.
     """
-    parts = [req.question.rstrip(". ")]
+    question = req.question.strip()
+    
+    # If the question already contains the location (e.g. "... in Phoenix ..."),
+    # we don't need to append an artificial "Tomato in Phoenix" suffix.
+    if req.location and req.location.lower() in question.lower():
+        return question
+
+    # For pure agronomic threshold queries, preserve the pure query:
+    pure_agri_keywords = ["threshold for", "germination temperature", "safe range", "stress temperature", "what temperature", "agronomic threshold"]
+    if any(k in question.lower() for k in pure_agri_keywords):
+        return question
+
+    # Otherwise assemble structured fields into a natural goal string
+    parts = [question.rstrip(". ")]
     parts.append(f"{req.crop} in {req.location}")
     if req.crop_stage:
         parts.append(f"during {req.crop_stage}")
@@ -163,11 +175,17 @@ def analyze(request: AnalysisRequest) -> AnalysisResponse:
     The request fields are assembled into a natural-language goal string and
     passed directly to the Phase 3 AgentOrchestrator.  No agent logic is
     duplicated here — this endpoint is a pure adapter.
+
+    When DEMO_MODE=true, injects deterministic ToolResult fixtures from
+    app.demo_data to support offline execution without FortyGuard API credits.
     """
     goal = _build_goal_string(request)
 
+    demo_mode = os.getenv("DEMO_MODE", "false").lower() in ("true", "1")
+    mock_payload = build_demo_mock_payload() if demo_mode else None
+
     try:
-        raw_result = _orchestrator.execute_goal(goal)
+        raw_result = _orchestrator.execute_goal(goal, mock_data=mock_payload)
     except Exception as exc:
         # Surface unexpected orchestrator errors via safe AgentError handler (HTTP 500)
         # Internal traceback/implementation details are never leaked.

@@ -274,5 +274,122 @@ class TestAPIEndpoints(unittest.TestCase):
         self.assertEqual(len(agronomic_sources), 0, "Unknown crop must not cite agronomic evidence.")
 
 
+    # ── Phase 4.3: Demo Mode / Offline Cache Tests ────────────────────────────
+
+    def test_demo_mode_scenario_a_tomato_heat_risk(self):
+        """Scenario A with DEMO_MODE=true evaluates 34.5°C peak against 32°C threshold -> HIGH risk."""
+        import os
+        from unittest.mock import patch
+
+        with patch.dict(os.environ, {"DEMO_MODE": "true", "FORTYGUARD_API_KEY": ""}):
+            payload = {
+                "location": "Phoenix, AZ",
+                "crop": "Tomato",
+                "crop_stage": "flowering",
+                "question": "Assess tomato heat risk in Phoenix during flowering.",
+            }
+            resp = self.client.post("/analyze", json=payload)
+            self.assertEqual(resp.status_code, 200)
+            data = resp.json()
+
+            # Status should be completed
+            self.assertEqual(data["status"], "completed")
+
+            # Risk assessment should be HIGH (34.5°C > 32°C)
+            self.assertEqual(data["risk_assessment"]["level"], "HIGH")
+
+            # Must have at least 1 violated finding
+            self.assertGreater(len(data["findings"]), 0)
+            self.assertEqual(data["findings"][0]["status"], "violated")
+
+            # Sources must clearly identify FortyGuard Demo Cache
+            fg_sources = [s for s in data["sources"] if "FortyGuard" in s.get("name", "")]
+            self.assertGreater(len(fg_sources), 0)
+            self.assertIn("Demo Cache", fg_sources[0].get("source", ""))
+
+            # Trace must mention FortyGuard Demo Cache
+            self.assertIn("FortyGuard (Demo Cache)", data["audit_trace"])
+
+    def test_demo_mode_scenario_b_historical_nasa_context(self):
+        """Scenario B with DEMO_MODE=true includes NasaPowerTool and NASA POWER Demo Cache source."""
+        import os
+        from unittest.mock import patch
+
+        with patch.dict(os.environ, {"DEMO_MODE": "true", "FORTYGUARD_API_KEY": ""}):
+            payload = {
+                "location": "Fresno, CA",
+                "crop": "Almond",
+                "crop_stage": "irrigation",
+                "question": "What was the historical climate context for almond irrigation in Fresno last July?",
+            }
+            resp = self.client.post("/analyze", json=payload)
+            self.assertEqual(resp.status_code, 200)
+            data = resp.json()
+
+            # Sources must clearly identify NASA POWER Demo Cache
+            nasa_sources = [
+                s for s in data["sources"]
+                if "Nasa" in (s.get("name") or "")
+                or "NASA" in (s.get("name") or "")
+                or "NASA" in (s.get("source") or "")
+            ]
+            self.assertGreater(len(nasa_sources), 0)
+            self.assertIn("Demo Cache", (nasa_sources[0].get("source") or ""))
+
+    def test_demo_mode_scenario_c_pure_agronomic(self):
+        """Scenario C (pure agronomic question) in demo mode plans RAG only and returns INSUFFICIENT_EVIDENCE."""
+        import os
+        from unittest.mock import patch
+
+        with patch.dict(os.environ, {"DEMO_MODE": "true", "FORTYGUARD_API_KEY": ""}):
+            payload = {
+                "location": "Fresno, CA",
+                "crop": "Tomato",
+                "crop_stage": "flowering",
+                "question": "Find the agronomic heat threshold for tomatoes during flowering.",
+            }
+            resp = self.client.post("/analyze", json=payload)
+            self.assertEqual(resp.status_code, 200)
+            data = resp.json()
+
+            # Environmental tools should not run
+            self.assertEqual(data["plan"], ["AgronomicEvidenceTool"])
+            self.assertEqual(data["risk_assessment"]["level"], "INSUFFICIENT_EVIDENCE")
+
+    def test_demo_mode_scenario_d_unknown_crop(self):
+        """Scenario D (unknown crop Pineapple) in demo mode preserves INSUFFICIENT_EVIDENCE and zero citations."""
+        import os
+        from unittest.mock import patch
+
+        with patch.dict(os.environ, {"DEMO_MODE": "true", "FORTYGUARD_API_KEY": ""}):
+            payload = {
+                "location": "Miami, FL",
+                "crop": "Pineapple",
+                "question": "What is the optimal temperature for growing pineapples?",
+            }
+            resp = self.client.post("/analyze", json=payload)
+            self.assertEqual(resp.status_code, 200)
+            data = resp.json()
+
+            self.assertEqual(data["risk_assessment"]["level"], "INSUFFICIENT_EVIDENCE")
+            agronomic_sources = [s for s in data["sources"] if s["type"] == "agronomic"]
+            self.assertEqual(len(agronomic_sources), 0)
+
+    def test_demo_mode_no_secrets_leakage(self):
+        """Ensure no API keys or internal secrets are leaked in response payloads or traces."""
+        import os
+        from unittest.mock import patch
+
+        with patch.dict(os.environ, {"DEMO_MODE": "true", "FORTYGUARD_API_KEY": "secret_key_12345"}):
+            payload = {
+                "location": "Phoenix, AZ",
+                "crop": "Tomato",
+                "question": "Assess tomato heat risk in Phoenix during flowering.",
+            }
+            resp = self.client.post("/analyze", json=payload)
+            self.assertEqual(resp.status_code, 200)
+            self.assertNotIn("secret_key_12345", resp.text)
+
+
 if __name__ == "__main__":
     unittest.main()
