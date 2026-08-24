@@ -1,0 +1,312 @@
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from typing import Dict, Any, Optional, List
+import datetime
+
+# Import actual Phase 1 & Phase 2 modules
+from fortyguard.geocoding import geocode_us_location
+from fortyguard.client import FortyGuardClient
+from fortyguard.nasa_power import fetch_nasa_power_daily
+from knowledge.evidence_tool import retrieve_agronomic_evidence
+
+@dataclass
+class ToolResult:
+    tool: str
+    status: str  # "success" | "partial" | "failed"
+    inputs: Dict[str, Any]
+    data: Dict[str, Any]
+    source: str
+    reference: str
+    error: Optional[str] = None
+
+class BaseTool(ABC):
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        pass
+
+    @property
+    @abstractmethod
+    def description(self) -> str:
+        pass
+
+    @abstractmethod
+    def execute(self, **kwargs) -> ToolResult:
+        pass
+
+class GeocodingTool(BaseTool):
+    @property
+    def name(self) -> str:
+        return "GeocodingTool"
+
+    @property
+    def description(self) -> str:
+        return "Resolves a textual US location name into lat/lon coordinates."
+
+    def execute(self, location: str) -> ToolResult:
+        inputs = {"location": location}
+        try:
+            res = geocode_us_location(location)
+            return ToolResult(
+                tool=self.name,
+                status="success",
+                inputs=inputs,
+                data={
+                    "latitude": res["latitude"],
+                    "longitude": res["longitude"],
+                    "matched_address": res["matched_address"]
+                },
+                source="US Census Geocoder",
+                reference="Census Bureau geocoder/locations/onelineaddress"
+            )
+        except Exception as e:
+            return ToolResult(
+                tool=self.name,
+                status="failed",
+                inputs=inputs,
+                data={},
+                source="US Census Geocoder",
+                reference="Census Bureau geocoder",
+                error=str(e)
+            )
+
+class FortyGuardTool(BaseTool):
+    @property
+    def name(self) -> str:
+        return "FortyGuardTool"
+
+    @property
+    def description(self) -> str:
+        return "Retrieves hyperlocal heatmaps (exceedance, persistence, TCM) and environmental parameters."
+
+    def _make_square_aoi(self, latitude: float, longitude: float, size_degrees: float = 0.005) -> Dict[str, Any]:
+        half = size_degrees / 2.0
+        return {
+            "type": "Polygon",
+            "coordinates": [[
+                [longitude - half, latitude - half],
+                [longitude + half, latitude - half],
+                [longitude + half, latitude + half],
+                [longitude - half, latitude + half],
+                [longitude - half, latitude - half]
+            ]]
+        }
+
+    def execute(
+        self,
+        latitude: float,
+        longitude: float,
+        start_date: str,
+        end_date: Optional[str] = None,
+        analytic_type: str = "tcm",
+        threshold: Optional[float] = None,
+        direction: Optional[str] = None,
+        run_env_params: bool = False,
+        temperature: float = 30.0
+    ) -> ToolResult:
+        inputs = {
+            "latitude": latitude,
+            "longitude": longitude,
+            "start_date": start_date,
+            "end_date": end_date,
+            "analytic_type": analytic_type,
+            "threshold": threshold,
+            "direction": direction,
+            "run_env_params": run_env_params,
+            "temperature": temperature
+        }
+        
+        # Build client - check if API key exists. If not, fail gracefully (to support keyless validation)
+        api_key = os.getenv("FORTYGUARD_API_KEY")
+        if not api_key:
+            return ToolResult(
+                tool=self.name,
+                status="failed",
+                inputs=inputs,
+                data={},
+                source="FortyGuard API",
+                reference="Enterprise API Connection",
+                error="FORTYGUARD_API_KEY environment variable is not configured."
+            )
+
+        try:
+            client = FortyGuardClient()
+            data = {}
+            
+            # Determine date filter type: 3 = single day, 4 = range of days
+            filter_type = 4 if end_date else 3
+            
+            if run_env_params:
+                # Call environmental parameters
+                env_res = client.environmental_parameters(
+                    latitude=latitude,
+                    longitude=longitude,
+                    temperature=temperature,
+                    start_date=start_date,
+                    filter_type=filter_type,
+                    end_date=end_date
+                )
+                # Unwrap wait_for result
+                if isinstance(env_res, dict):
+                    data["env_params"] = env_res.get("result", env_res)
+                else:
+                    data["env_params"] = env_res
+
+            # Call heatmap creation
+            polygon_aoi = self._make_square_aoi(latitude, longitude)
+            heatmap_res = client.create_heatmap(
+                polygon_aoi=polygon_aoi,
+                start_date=start_date,
+                filter_type=filter_type,
+                end_date=end_date,
+                analytic_type=analytic_type,
+                threshold=threshold,
+                direction=direction,
+                verbose=False
+            )
+            
+            if isinstance(heatmap_res, dict):
+                data["heatmap"] = heatmap_res.get("result", heatmap_res)
+            else:
+                data["heatmap"] = heatmap_res
+                
+            return ToolResult(
+                tool=self.name,
+                status="success",
+                inputs=inputs,
+                data=data,
+                source="FortyGuard",
+                reference=f"Task API /v1/heatmap ({analytic_type})"
+            )
+        except Exception as e:
+            return ToolResult(
+                tool=self.name,
+                status="failed",
+                inputs=inputs,
+                data={},
+                source="FortyGuard",
+                reference="Task API",
+                error=str(e)
+            )
+
+class NasaPowerTool(BaseTool):
+    @property
+    def name(self) -> str:
+        return "NasaPowerTool"
+
+    @property
+    def description(self) -> str:
+        return "Fetches daily historical environmental data (precipitation, root zone wetness, humidity) from NASA POWER."
+
+    def execute(
+        self,
+        latitude: float,
+        longitude: float,
+        start_date: str,
+        end_date: str,
+        parameters: Optional[List[str]] = None
+    ) -> ToolResult:
+        inputs = {
+            "latitude": latitude,
+            "longitude": longitude,
+            "start_date": start_date,
+            "end_date": end_date,
+            "parameters": parameters
+        }
+        try:
+            res = fetch_nasa_power_daily(
+                latitude=latitude,
+                longitude=longitude,
+                start_date=start_date,
+                end_date=end_date,
+                parameters=parameters
+            )
+            return ToolResult(
+                tool=self.name,
+                status="success",
+                inputs=inputs,
+                data=res,
+                source="NASA POWER",
+                reference="climatology API temporal/daily/point"
+            )
+        except Exception as e:
+            return ToolResult(
+                tool=self.name,
+                status="failed",
+                inputs=inputs,
+                data={},
+                source="NASA POWER",
+                reference="climatology API",
+                error=str(e)
+            )
+
+class AgronomicEvidenceTool(BaseTool):
+    @property
+    def name(self) -> str:
+        return "AgronomicEvidenceTool"
+
+    @property
+    def description(self) -> str:
+        return "Retrieves trusted agronomic evidence and thresholds (temperatures, stages, stress metrics) from the RAG store."
+
+    def execute(
+        self,
+        query: str,
+        crop: Optional[str] = None,
+        crop_stage: Optional[str] = None,
+        topic: Optional[str] = None,
+        top_k: int = 3
+    ) -> ToolResult:
+        inputs = {
+            "query": query,
+            "crop": crop,
+            "crop_stage": crop_stage,
+            "topic": topic,
+            "top_k": top_k
+        }
+        try:
+            res = retrieve_agronomic_evidence(
+                query=query,
+                crop=crop,
+                crop_stage=crop_stage,
+                topic=topic,
+                top_k=top_k
+            )
+            return ToolResult(
+                tool=self.name,
+                status="success",
+                inputs=inputs,
+                data={"evidence": res},
+                source="Agronomic RAG Store",
+                reference="knowledge_store.json vector index"
+            )
+        except Exception as e:
+            return ToolResult(
+                tool=self.name,
+                status="failed",
+                inputs=inputs,
+                data={"evidence": []},
+                source="Agronomic RAG Store",
+                reference="knowledge_store.json vector index",
+                error=str(e)
+            )
+
+class ToolRegistry:
+    def __init__(self):
+        self._tools: Dict[str, BaseTool] = {}
+        # Auto-register core tools
+        self.register(GeocodingTool())
+        self.register(FortyGuardTool())
+        self.register(NasaPowerTool())
+        self.register(AgronomicEvidenceTool())
+
+    def register(self, tool: BaseTool) -> None:
+        self._tools[tool.name] = tool
+
+    def get_tool(self, name: str) -> BaseTool:
+        if name not in self._tools:
+            raise KeyError(f"Tool '{name}' is not registered in registry.")
+        return self._tools[name]
+
+    def list_tools(self) -> List[Dict[str, str]]:
+        return [{"name": name, "description": t.description} for name, t in self._tools.items()]

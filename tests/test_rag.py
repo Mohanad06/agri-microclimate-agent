@@ -189,5 +189,44 @@ Deficit irrigation during hull split requires maintaining stem water potential b
         self.assertTrue(len(results) > 0) # Should still return chunks but with 0 score (or low score)
         self.assertEqual(results[0]["score"], 0.0)
 
+    def test_crop_scope_guard_blocks_unknown_crop(self):
+        """Unknown/unsupported crops must return zero evidence and zero citations.
+
+        The Crop Scope Guard in retrieve_agronomic_evidence() must prevent
+        cross-crop leakage: a pineapple query must not cite Tomato or Almond
+        chunks even when those chunks have high semantic similarity scores.
+        """
+        # crop=None (unrecognised crop from goal parser)
+        results_none_crop = retrieve_agronomic_evidence(
+            query="What is the optimal temperature for growing pineapples?",
+            crop=None
+        )
+        self.assertEqual(
+            len(results_none_crop), 0,
+            "crop=None must return empty — no cross-crop citations allowed."
+        )
+
+        # crop explicitly set to an unsupported crop name
+        results_unknown = retrieve_agronomic_evidence(
+            query="What is the optimal temperature for pineapples during flowering?",
+            crop="Pineapple"
+        )
+        self.assertEqual(
+            len(results_unknown), 0,
+            "An unsupported crop must return empty — must not cite Tomato/Almond evidence."
+        )
+
+        # Verify crops returned are ONLY the requested crop (no leakage)
+        results_tomato = retrieve_agronomic_evidence(
+            query="What temperature causes tomato flower stress?",
+            crop="Tomato"
+        )
+        if results_tomato:  # If knowledge base is loaded
+            returned_crops = {r["crop"] for r in results_tomato}
+            self.assertTrue(
+                returned_crops.issubset({"Tomato"}),
+                f"Tomato query returned non-Tomato chunks: {returned_crops}"
+            )
+
 if __name__ == "__main__":
     unittest.main()

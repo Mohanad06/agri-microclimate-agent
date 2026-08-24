@@ -10,31 +10,31 @@ AI-powered agricultural microclimate decision engine for planting and irrigation
 
 ## Current Phase
 
-**Phase 2 — Agronomic Knowledge & RAG**
+**Phase 3 — Agentic Orchestration / Goal-Driven Heat Agent**
 
 ---
 
 ## Status
 
-**COMPLETED**
+**COMPLETED AND APPROVED**
 
 ---
 
 ## Last Approved Phase
 
-**Phase 2 — Agronomic Knowledge & RAG**
+**Phase 3 — Agentic Orchestration / Goal-Driven Heat Agent**
 
 ---
 
 ## Current Task
 
-None (Phase 2 is fully verified and completed)
+None (Phase 3 is fully verified and approved)
 
 ---
 
 ## Next Task
 
-Phase 3 — Agentic Orchestration / Goal-Driven Heat Agent
+Phase 4 — (To be defined)
 
 ---
 
@@ -69,18 +69,110 @@ Phase 3 — Agentic Orchestration / Goal-Driven Heat Agent
 - **Task 1 (Source Ingestion & Chunking)**: Designed a modular markdown parser in `knowledge/ingest.py` that extracts document-level metadata (crop, source, URL) and splits guides into semantic chunks based on headers and paragraphs.
 - **Task 2 (Vector Database & Embeddings)**: Built `knowledge/vector_store.py` with custom TF-IDF/cosine similarity calculations for keyless fallback, supporting offline execution and dynamic API key embedding overrides.
 - **Task 3 (Evidence Tool Abstraction)**: Implemented the clean evidence retrieval contract `retrieve_agronomic_evidence()` in `knowledge/evidence_tool.py` returning source-traceable metadata and relevance scores.
-- **Task 4 (Traceability & Testing)**: Created comprehensive tests in `tests/test_rag.py` (6 tests passing) and a manual verification trace tool in `knowledge/manual_verification.py`. Verified that all 4 baseline queries return correct, semantic, and source-cited matches (e.g. Mild stress SWP of -1.0 to -1.4 MPa).
+  - Added **Crop Scope Guard** (Phase 3 hardening): `crop=None` or unsupported crops return `[]` immediately, preventing cross-crop citation leakage.
+- **Task 4 (Traceability & Testing)**: Created comprehensive tests in `tests/test_rag.py` (7 tests passing, including crop scope guard regression) and a manual verification trace tool in `knowledge/manual_verification.py`. Verified that all 4 baseline queries return correct, semantic, and source-cited matches (e.g. Mild stress SWP of -1.0 to -1.4 MPa).
+
+### Phase 3 Tasks completed
+
+Phase 3 implemented the first real agentic layer: a **Goal-Driven Heat Agent** that accepts a natural-language agricultural goal and autonomously parses, plans, executes tools, aggregates evidence, and evaluates risk — with a fully auditable execution trace.
+
+#### Architecture
+
+The Phase 3 agentic loop follows the policy:
+```
+Goal → Parse → Plan (dynamic) → Tool Execution → Evidence Aggregation → Decision → Auditable Result
+```
+
+Data source boundaries are strictly enforced:
+- **RAG / Agronomic Knowledge**: Static, trusted thresholds and crop-stage evidence only.
+- **FortyGuard**: Primary runtime source for hyperlocal heat/exceedance conditions.
+- **NASA POWER**: Historical/climatological context only when the goal requires it.
+
+#### Modules implemented
+
+- **`agent/tool_registry.py`**: Standard `ToolResult` dataclass and `BaseTool` abstract base class. Concrete wrappers: `GeocodingTool`, `FortyGuardTool`, `NasaPowerTool`, `AgronomicEvidenceTool`. Central `ToolRegistry` for registration and lookup.
+- **`agent/goal_parser.py`**: Deterministic keyword-based natural-language goal parser. Extracts `crop`, `crop_stage`, `location`, `history_requested`, and `is_pure_agronomic` flags. Designed to support optional LLM enhancement in future phases.
+- **`agent/planner.py`**: Dynamic tool sequencer. Selects only the tools required by the parsed goal — no fixed pipeline. Examples:
+  - `"Find the agronomic threshold for tomatoes..."` → `[AgronomicEvidenceTool]` only
+  - `"Assess tomato heat risk in Phoenix..."` → `[GeocodingTool, AgronomicEvidenceTool, FortyGuardTool]`
+  - `"Historical climate context..."` → `[GeocodingTool, AgronomicEvidenceTool, NasaPowerTool]`
+- **`agent/decision.py`**: Two-component decision layer:
+  - `EvidenceParser`: Extracts numeric thresholds from RAG text (e.g. `32°C`, `-1.0 to -1.4 MPa`, `GWETROOT below 0.20`) using deterministic regex patterns.
+  - `DecisionLayer`: Compares observed environmental values against parsed thresholds. Includes a mandatory **Evidence Sufficiency Gate** (`comparisons_made` counter): if no actual metric comparison was executed (no observed data available or cross-crop mismatch), the result is `INSUFFICIENT_EVIDENCE` — never a speculative `LOW`/`HIGH`.
+- **`agent/trace.py`**: `AuditLogger` records all steps, tool invocations, inputs, and results in a user-facing safe trace. Private keys, system prompts, and internal chain-of-thought are never exposed.
+- **`agent/orchestrator.py`**: Central `AgentOrchestrator` coordinates the full loop. Dynamically injects RAG-extracted temperature thresholds into FortyGuard exceedance queries. Handles partial tool failures gracefully. Outputs structured JSON result with findings, risk assessment, cited sources, and audit trace.
+- **`agent/manual_verification.py`**: E2E scenario runner for manual trace inspection.
+
+#### Evidence policies enforced
+
+- **No fabricated agronomic recommendations**: Every recommendation is bound to a `reference_id` (chunk ID) from the RAG store.
+- **Cross-crop citation leakage blocked**: The Crop Scope Guard in `evidence_tool.py` prevents tomato/almond chunks from being cited for unknown crops.
+- **Evidence Sufficiency Gate**: Risk level requires at least one successful observation-vs-threshold comparison. No comparison → `INSUFFICIENT_EVIDENCE`.
+- **Partial failure support**: If a tool fails (e.g. FortyGuard API timeout), the orchestrator marks status as `partial`, logs the error in the audit trace, and continues with available data.
+
+#### Verification results (Phase 3 Approval)
+
+| Test Suite | Tests | Result |
+|---|---|---|
+| Phase 1 (`fortyguard/test_site_profile.py`) | 8 | ✅ ALL PASS |
+| Phase 2 (`tests/test_rag.py`) | 7 | ✅ ALL PASS |
+| Phase 3 (`tests/test_agent.py`) | 9 | ✅ ALL PASS |
+| Full suite (`discover -s tests`) | 16 | ✅ ALL PASS |
+
+#### E2E Manual Verification
+
+| Scenario | Plan | Result |
+|---|---|---|
+| A — Tomato flowering heat risk in Phoenix | `Geocoding → RAG → FortyGuard` | ✅ PASS — 34.5°C > 32°C → HIGH risk, UC ANR cited |
+| B — Historical climate context in Phoenix | `Geocoding → RAG → NASA POWER` | ✅ PASS — NASA POWER correctly triggered for historical request |
+| C — RAG-only agronomic threshold query | `RAG only` | ✅ PASS — INSUFFICIENT_EVIDENCE (no runtime data to compare) |
+| D — Unknown crop (Pineapple) | `RAG only` | ✅ PASS — INSUFFICIENT_EVIDENCE, zero citations, no cross-crop leakage |
 
 ### Existing Repository Structure
 
 ```text
 agri-microclimate-agent/
 │
+├── agent/                        # Phase 3 — Agentic Orchestration
+│   ├── __init__.py
+│   ├── decision.py               # EvidenceParser + DecisionLayer (sufficiency gate)
+│   ├── goal_parser.py            # Deterministic NL goal parser
+│   ├── manual_verification.py    # E2E scenario runner
+│   ├── orchestrator.py           # AgentOrchestrator (central execution loop)
+│   ├── planner.py                # Dynamic tool sequencer
+│   ├── tool_registry.py          # ToolResult, BaseTool, concrete wrappers, registry
+│   └── trace.py                  # AuditLogger (safe user-facing trace)
+│
 ├── assets/
 ├── data/
+│   ├── knowledge_base/           # Phase 2 — Verified agronomic markdown documents
+│   └── knowledge_store.json      # Phase 2 — TF-IDF vector index
+│
 ├── docs/
-├── fortyguard/
+│   ├── BACKEND_DESIGN.md
+│   ├── GOALS.md
+│   └── PROJECT_STATE.md
+│
+├── fortyguard/                   # Phase 1 — Data Layer
+│   ├── client.py
+│   ├── geocoding.py
+│   ├── nasa_power.py
+│   ├── samples.py
+│   ├── site_profile.py
+│   ├── test_geocoding.py
+│   ├── test_nasa_power.py
+│   └── test_site_profile.py
+│
+├── knowledge/                    # Phase 2 — RAG Layer
+│   ├── evidence_tool.py          # Crop Scope Guard + retrieve_agronomic_evidence()
+│   ├── ingest.py
+│   ├── manual_verification.py
+│   └── vector_store.py
+│
 ├── notebooks/
+├── tests/
+│   ├── test_agent.py             # Phase 3 — 9 tests (planning, decision, regression)
+│   └── test_rag.py               # Phase 2 — 7 tests (including crop scope guard)
 │
 ├── .env.example
 ├── .gitignore
