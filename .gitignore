@@ -246,3 +246,12 @@ data/street_view/*
 !data/env_params/
 data/env_params/*
 !data/env_params/env_params_parcel_*.json
+
+
+# Phase 2 - Agronomic RAG knowledge sources
+!data/
+!data/knowledge_base/
+!data/knowledge_base/*.md
+
+# Generated RAG index remains ignored
+data/knowledge_store.json

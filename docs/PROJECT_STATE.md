@@ -10,31 +10,31 @@ AI-powered agricultural microclimate decision engine for planting and irrigation
 
 ## Current Phase
 
-**Phase 1 — Data Layer**
+**Phase 2 — Agronomic Knowledge & RAG**
 
 ---
 
 ## Status
 
-**IN PROGRESS**
+**COMPLETED**
 
 ---
 
 ## Last Approved Phase
 
-**Phase 1 — Task 6: NASA POWER Implementation**
+**Phase 2 — Agronomic Knowledge & RAG**
 
 ---
 
 ## Current Task
 
-Phase 1 — Task 7: Data Normalization and Site Profile Design.
+None (Phase 2 is fully verified and completed)
 
 ---
 
 ## Next Task
 
-Phase 2 — Agronomic Knowledge & RAG.
+Phase 3 — Agentic Orchestration / Goal-Driven Heat Agent
 
 ---
 
@@ -63,6 +63,13 @@ Phase 2 — Agronomic Knowledge & RAG.
   - *Data Normalization*: Implemented `normalize_fortyguard_heatmap()`, `normalize_nasa_power()`, and `build_site_profile()` to compile raw JSON responses into a single cohesive profile.
   - *Error Handling & Data Quality*: Enforces coordinate checks, date consistency, and preserves `-999.0` NASA POWER fill values as `None` (flagging data quality status as `PARTIAL` when missing values occur).
   - *Tests*: Resolved constructor bypass issues by centralizing quality status resolution in the `SiteProfile.__post_init__` hook. All 8 tests (testing 10 scenarios) pass successfully.
+
+### Phase 2 Tasks completed
+
+- **Task 1 (Source Ingestion & Chunking)**: Designed a modular markdown parser in `knowledge/ingest.py` that extracts document-level metadata (crop, source, URL) and splits guides into semantic chunks based on headers and paragraphs.
+- **Task 2 (Vector Database & Embeddings)**: Built `knowledge/vector_store.py` with custom TF-IDF/cosine similarity calculations for keyless fallback, supporting offline execution and dynamic API key embedding overrides.
+- **Task 3 (Evidence Tool Abstraction)**: Implemented the clean evidence retrieval contract `retrieve_agronomic_evidence()` in `knowledge/evidence_tool.py` returning source-traceable metadata and relevance scores.
+- **Task 4 (Traceability & Testing)**: Created comprehensive tests in `tests/test_rag.py` (6 tests passing) and a manual verification trace tool in `knowledge/manual_verification.py`. Verified that all 4 baseline queries return correct, semantic, and source-cited matches (e.g. Mild stress SWP of -1.0 to -1.4 MPa).
 
 ### Existing Repository Structure
 
