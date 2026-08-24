@@ -130,6 +130,132 @@ class TestAPIEndpoints(unittest.TestCase):
         }
         resp = self.client.post("/analyze", json=payload)
         self.assertEqual(resp.status_code, 422)
+        data = resp.json()
+        self.assertIn("error", data)
+        self.assertEqual(data["error"]["code"], "VALIDATION_ERROR")
+
+    # ── Phase 4.2: Structured Validation & Error Handling Tests ───────────────
+
+    def test_analyze_whitespace_location_returns_structured_422(self):
+        """Whitespace-only location must return HTTP 422 with VALIDATION_ERROR code."""
+        payload = {
+            "location": "   ",
+            "crop": "Tomato",
+            "question": "Assess heat risk.",
+        }
+        resp = self.client.post("/analyze", json=payload)
+        self.assertEqual(resp.status_code, 422)
+        data = resp.json()
+        self.assertIn("error", data)
+        self.assertEqual(data["error"]["code"], "VALIDATION_ERROR")
+        self.assertIn("details", data["error"])
+        fields = [d["field"] for d in data["error"]["details"]]
+        self.assertIn("location", fields)
+
+    def test_analyze_empty_crop_returns_422(self):
+        """Empty or whitespace-only crop must return HTTP 422."""
+        payload = {
+            "location": "Phoenix, AZ",
+            "crop": "   ",
+            "question": "Assess heat risk.",
+        }
+        resp = self.client.post("/analyze", json=payload)
+        self.assertEqual(resp.status_code, 422)
+        data = resp.json()
+        self.assertEqual(data["error"]["code"], "VALIDATION_ERROR")
+        fields = [d["field"] for d in data["error"]["details"]]
+        self.assertIn("crop", fields)
+
+    def test_analyze_whitespace_question_returns_422(self):
+        """Whitespace-only question must return HTTP 422."""
+        payload = {
+            "location": "Phoenix, AZ",
+            "crop": "Tomato",
+            "question": "       ",
+        }
+        resp = self.client.post("/analyze", json=payload)
+        self.assertEqual(resp.status_code, 422)
+        data = resp.json()
+        self.assertEqual(data["error"]["code"], "VALIDATION_ERROR")
+
+    def test_analyze_question_too_short_returns_422(self):
+        """Question under 5 chars must return HTTP 422."""
+        payload = {
+            "location": "Phoenix, AZ",
+            "crop": "Tomato",
+            "question": "Hi",
+        }
+        resp = self.client.post("/analyze", json=payload)
+        self.assertEqual(resp.status_code, 422)
+        data = resp.json()
+        self.assertEqual(data["error"]["code"], "VALIDATION_ERROR")
+
+    def test_analyze_excessive_length_returns_422(self):
+        """Excessively long inputs must return HTTP 422."""
+        payload = {
+            "location": "A" * 201,  # max is 200
+            "crop": "Tomato",
+            "question": "Assess heat risk.",
+        }
+        resp = self.client.post("/analyze", json=payload)
+        self.assertEqual(resp.status_code, 422)
+        data = resp.json()
+        self.assertEqual(data["error"]["code"], "VALIDATION_ERROR")
+
+    def test_analyze_unexpected_exception_returns_structured_500(self):
+        """An unhandled AgentOrchestrator exception must return structured 500 with no traceback leaked."""
+        from unittest.mock import patch
+        from app.api import routes
+
+        with patch.object(routes._orchestrator, "execute_goal", side_effect=RuntimeError("Internal system failure")):
+            payload = {
+                "location": "Phoenix, AZ",
+                "crop": "Tomato",
+                "question": "Assess heat risk.",
+            }
+            resp = self.client.post("/analyze", json=payload)
+            self.assertEqual(resp.status_code, 500)
+            data = resp.json()
+            self.assertIn("error", data)
+            self.assertEqual(data["error"]["code"], "INTERNAL_ERROR")
+            self.assertEqual(data["error"]["message"], "The analysis could not be completed.")
+            # Verify no tracebacks, file paths, or private details leaked
+            self.assertNotIn("Traceback", resp.text)
+            self.assertNotIn("RuntimeError", resp.text)
+            self.assertNotIn("Internal system failure", resp.text)
+
+    def test_analyze_partial_agent_result_returns_200(self):
+        """A partial result from the agent must return HTTP 200 preserving the status."""
+        from unittest.mock import patch
+        from app.api import routes
+
+        mock_partial_result = {
+            "goal": "Assess tomato heat risk. Tomato in Phoenix, AZ.",
+            "status": "partial",
+            "location": {"latitude": 33.4484, "longitude": -112.0740, "address": "Phoenix, AZ"},
+            "plan": ["GeocodingTool", "AgronomicEvidenceTool", "FortyGuardTool"],
+            "tool_calls": [
+                {"tool": "GeocodingTool", "status": "success", "source": "Census", "reference": "Geo"},
+                {"tool": "FortyGuardTool", "status": "failed", "source": "FG", "reference": "API", "error": "Timeout"},
+            ],
+            "findings": [],
+            "risk_assessment": {"level": "INSUFFICIENT_EVIDENCE", "reasoning": "Missing metrics due to failure in: ['FortyGuardTool']"},
+            "recommendations": [],
+            "sources": [],
+            "audit_trace": "Trace mock details",
+        }
+
+        with patch.object(routes._orchestrator, "execute_goal", return_value=mock_partial_result):
+            payload = {
+                "location": "Phoenix, AZ",
+                "crop": "Tomato",
+                "question": "Assess heat risk.",
+            }
+            resp = self.client.post("/analyze", json=payload)
+            self.assertEqual(resp.status_code, 200)
+            data = resp.json()
+            self.assertEqual(data["status"], "partial")
+            self.assertEqual(data["risk_assessment"]["level"], "INSUFFICIENT_EVIDENCE")
 
     # ── Test 5: Unknown crop → INSUFFICIENT_EVIDENCE ─────────────────────────
     def test_analyze_unknown_crop_returns_insufficient_evidence(self):

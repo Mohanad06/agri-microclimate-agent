@@ -8,9 +8,10 @@ All three endpoints in Phase 4.1:
 """
 from typing import List
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 from agent.orchestrator import AgentOrchestrator
+from app.api.errors import AgentError
 from app.schemas.analysis import (
     AnalysisRequest,
     AnalysisResponse,
@@ -168,11 +169,8 @@ def analyze(request: AnalysisRequest) -> AnalysisResponse:
     try:
         raw_result = _orchestrator.execute_goal(goal)
     except Exception as exc:
-        # Surface unexpected orchestrator errors as 500 with a safe message.
-        # Full tracebacks are logged server-side (stderr) but never sent to clients.
-        raise HTTPException(
-            status_code=500,
-            detail=f"Analysis failed: {type(exc).__name__}: {exc}",
-        ) from exc
+        # Surface unexpected orchestrator errors via safe AgentError handler (HTTP 500)
+        # Internal traceback/implementation details are never leaked.
+        raise AgentError("The analysis could not be completed.") from exc
 
     return _map_response(raw_result)

@@ -9,7 +9,9 @@ Interactive docs:
     http://127.0.0.1:8000/redoc     (ReDoc)
 """
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 
+from app.api.errors import AgentError, agent_error_handler, validation_exception_handler
 from app.api.routes import router
 
 app = FastAPI(
@@ -28,5 +30,9 @@ app = FastAPI(
     license_info={"name": "MIT"},
 )
 
-# Mount all Phase 4.1 routes (no prefix — /health, /crops, /analyze live at root)
+# Register structured exception handlers
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+app.add_exception_handler(AgentError, agent_error_handler)
+
+# Mount all Phase 4 routes (no prefix — /health, /crops, /analyze live at root)
 app.include_router(router)

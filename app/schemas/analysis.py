@@ -16,7 +16,7 @@ model, preserving all nested structures.
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 # ─── Request ─────────────────────────────────────────────────────────────────
@@ -33,26 +33,68 @@ class AnalysisRequest(BaseModel):
     location: str = Field(
         ...,
         min_length=1,
+        max_length=200,
         description="Farm or field location (city, address, or lat/lon description).",
         examples=["Phoenix, AZ", "Fresno, CA"],
     )
     crop: str = Field(
         ...,
         min_length=1,
+        max_length=50,
         description="Target crop name (must match a supported crop in the knowledge base).",
         examples=["Tomato", "Almond"],
     )
     crop_stage: Optional[str] = Field(
         default=None,
+        max_length=50,
         description="Growth stage of the crop (e.g. 'flowering', 'planting', 'irrigation').",
         examples=["flowering", "planting"],
     )
     question: str = Field(
         ...,
         min_length=5,
+        max_length=500,
         description="Natural-language agricultural question or goal.",
         examples=["Is it safe to plant tomatoes now?", "Assess heat risk during flowering."],
     )
+
+    @field_validator("location", "crop", "question", mode="after")
+    @classmethod
+    def validate_non_whitespace(cls, v: str, info) -> str:
+        trimmed = v.strip()
+        if not trimmed:
+            raise ValueError(f"{info.field_name.capitalize()} must not be empty or whitespace only.")
+        return trimmed
+
+    @field_validator("crop_stage", mode="after")
+    @classmethod
+    def validate_crop_stage(cls, v: Optional[str]) -> Optional[str]:
+        if v is not None:
+            trimmed = v.strip()
+            if not trimmed:
+                raise ValueError("Crop stage must not be empty or whitespace only if provided.")
+            return trimmed
+        return v
+
+
+# ─── Error Schemas ───────────────────────────────────────────────────────────
+
+class ErrorDetail(BaseModel):
+    """Field-level error detail."""
+    field: str
+    message: str
+
+
+class ErrorContent(BaseModel):
+    """Top-level structured error envelope content."""
+    code: str
+    message: str
+    details: Optional[List[ErrorDetail]] = None
+
+
+class ErrorResponse(BaseModel):
+    """Standard error response format for all API errors."""
+    error: ErrorContent
 
 
 # ─── Response sub-models ─────────────────────────────────────────────────────
