@@ -16,7 +16,7 @@ model, preserving all nested structures.
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 # ─── Request ─────────────────────────────────────────────────────────────────
@@ -36,6 +36,20 @@ class AnalysisRequest(BaseModel):
         max_length=200,
         description="Farm or field location (city, address, or lat/lon description).",
         examples=["Phoenix, AZ", "Fresno, CA"],
+    )
+    latitude: Optional[float] = Field(
+        default=None,
+        ge=-90.0,
+        le=90.0,
+        description="Optional exact farm latitude coordinate (e.g. from interactive map pin).",
+        examples=[33.4484],
+    )
+    longitude: Optional[float] = Field(
+        default=None,
+        ge=-180.0,
+        le=180.0,
+        description="Optional exact farm longitude coordinate (e.g. from interactive map pin).",
+        examples=[-112.0740],
     )
     crop: str = Field(
         ...,
@@ -57,6 +71,12 @@ class AnalysisRequest(BaseModel):
         description="Natural-language agricultural question or goal.",
         examples=["Is it safe to plant tomatoes now?", "Assess heat risk during flowering."],
     )
+
+    @model_validator(mode="after")
+    def validate_coordinates_pair(self) -> AnalysisRequest:
+        if (self.latitude is None and self.longitude is not None) or (self.latitude is not None and self.longitude is None):
+            raise ValueError("Both latitude and longitude must be provided together, or both omitted.")
+        return self
 
     @field_validator("location", "crop", "question", mode="after")
     @classmethod

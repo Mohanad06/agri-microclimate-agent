@@ -1,4 +1,5 @@
 import re
+import datetime
 from typing import Dict, Any, Optional, Tuple
 
 class GoalParser:
@@ -6,7 +7,7 @@ class GoalParser:
     
     def __init__(self):
         # Recognized crops and stage mappings
-        self.crops = ["tomato", "almond"]
+        self.crops = ["tomato", "almond", "corn", "grape", "cotton"]
         self.stages = {
             "germination": "planting",
             "planting": "planting",
@@ -77,17 +78,26 @@ class GoalParser:
         if not parsed_location:
             is_pure_agronomic = True
 
-        # 7. Parse time period (look for YYYY or months)
-        # For simplicity in testing/E2E, we default to a standard window (e.g. last month/current date) if none specified
-        start_date = "20240701"
-        end_date = "20240731" if history_requested else None
-        
-        # If user goal explicitly mentions a date or month, we could parse it,
-        # but let's keep it robust and simple for the benchmark queries.
+        # 7. Parse time period
+        # Default: use a recent 7-day window (yesterday-7 days → yesterday).
+        # This guarantees filter_type=4 (range) is used by FortyGuardTool,
+        # which is required for exceedance/persistence analytics.
+        today = datetime.date.today()
+        default_end = today - datetime.timedelta(days=1)
+        default_start = today - datetime.timedelta(days=8)
+        start_date = default_start.strftime("%Y%m%d")
+        end_date = default_end.strftime("%Y%m%d")
+
+        if history_requested:
+            # Historical: extend window to last 30 days
+            start_date = (today - datetime.timedelta(days=31)).strftime("%Y%m%d")
+            end_date = (today - datetime.timedelta(days=1)).strftime("%Y%m%d")
+
+        # If user explicitly mentions a month/year, parse it
         if "july" in lower_goal:
             start_date = "20240701"
             end_date = "20240731"
-            
+
         return {
             "crop": parsed_crop,
             "crop_stage": parsed_stage,

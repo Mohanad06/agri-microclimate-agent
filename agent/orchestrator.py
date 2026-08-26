@@ -15,13 +15,26 @@ class AgentOrchestrator:
         self.planner = Planner()
         self.decision_layer = DecisionLayer()
 
-    def execute_goal(self, goal: str, mock_data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def execute_goal(
+        self,
+        goal: str,
+        mock_data: Optional[Dict[str, Any]] = None,
+        latitude: Optional[float] = None,
+        longitude: Optional[float] = None,
+        location_name: Optional[str] = None
+    ) -> Dict[str, Any]:
         """Process a natural-language goal, execute planned tools, and return risk verdict + trace."""
         logger = AuditLogger()
         logger.log_step("Start Agent", "success", f"Processing goal: {goal}")
 
         # 1. Parse Goal
         params = self.parser.parse(goal)
+        has_explicit_coords = (latitude is not None and longitude is not None)
+        params["has_explicit_coords"] = has_explicit_coords
+
+        if location_name and (has_explicit_coords or params.get("location")):
+            params["location"] = location_name
+
         logger.log_step("Goal Parsing", "success", f"Extracted parameters: {params}")
 
         # 2. Plan Sequencing
@@ -29,9 +42,12 @@ class AgentOrchestrator:
         logger.log_step("Planning", "success", f"Generated execution plan: {plan}")
 
         # State trackers for data flow between tools
-        latitude = None
-        longitude = None
-        matched_address = None
+        input_lat = latitude
+        input_lon = longitude
+
+        latitude = input_lat
+        longitude = input_lon
+        matched_address = location_name
         evidence = []
         observed_data = {}
         tool_calls_log = []
@@ -45,8 +61,19 @@ class AgentOrchestrator:
             
             tool_result = None
             
-            # Allow mock data injection for deterministic testing
-            if mock_data and tool_name in mock_data:
+            # If explicit coordinates are provided for GeocodingTool, bypass external geocoding/mock lookups
+            if tool_name == "GeocodingTool" and input_lat is not None and input_lon is not None:
+                matched_address = location_name or params.get("location")
+                tool_result = ToolResult(
+                    tool="GeocodingTool",
+                    status="success",
+                    inputs={"location": matched_address, "latitude": input_lat, "longitude": input_lon},
+                    data={"latitude": input_lat, "longitude": input_lon, "matched_address": matched_address},
+                    source="Map Pin Input",
+                    reference="Explicit latitude/longitude supplied by frontend"
+                )
+            # Allow mock data injection for deterministic testing of other tools
+            elif mock_data and tool_name in mock_data:
                 # If mock data is provided, use it to populate ToolResult
                 mock_res = mock_data[tool_name]
                 if isinstance(mock_res, ToolResult):
@@ -79,36 +106,21 @@ class AgentOrchestrator:
                         # Require coordinates (either geocoded or default fallback)
                         lat = latitude or 36.7378  # Fresno fallback
                         lon = longitude or -119.7871
-                        
-                        # Dynamically resolve thresholds from retrieved RAG evidence!
-                        threshold = None
-                        direction = "above"
-                        analytic_type = "tcm"
-                        
-                        if evidence:
-                            ev_parser = EvidenceParser()
-                            thresholds = ev_parser.parse_thresholds(evidence)
-                            # Find temperature threshold for current stage
-                            temp_ths = [th for th in thresholds if th["metric"] == "temperature"]
-                            if temp_ths:
-                                # Retrieve first temp threshold value
-                                first_th = temp_ths[0]
-                                if isinstance(first_th["value"], tuple):
-                                    threshold = first_th["value"][1] # Use max of range
-                                else:
-                                    threshold = first_th["value"]
-                                direction = "above" if first_th["operator"] == "gt" else "below"
-                                analytic_type = "exceedance" # Switch from TCM to exceedance task!
-                                
+
+                        # Always use TCM (temperature snapshot heatmap).
+                        # The exceedance/persistence analytics require a higher
+                        # API tier and return 500 on Hackathon accounts.
+                        # The DecisionLayer compares TCM max temperature directly
+                        # against agronomic thresholds retrieved from RAG evidence.
                         tool_result = tool.execute(
                             latitude=lat,
                             longitude=lon,
                             start_date=params["start_date"],
                             end_date=params["end_date"],
-                            analytic_type=analytic_type,
-                            threshold=threshold,
-                            direction=direction,
-                            run_env_params=True
+                            analytic_type="tcm",
+                            threshold=None,
+                            direction=None,
+                            run_env_params=False
                         )
                         
                     elif tool_name == "FortyGuardEnvTool":
@@ -166,25 +178,41 @@ class AgentOrchestrator:
                     evidence = tool_result.data.get("evidence", [])
                     
                 elif tool_name == "FortyGuardTool":
-                    # Extract maximum temperature or stats values
+                    # Confirmed FortyGuard TCM response schema (from live API debug):
+                    # heatmap_data = {
+                    #   "map_data": {...},
+                    #   "stats_data": {
+                    #     "temperature_stats": {
+                    #       "minimum": float,   # Celsius
+                    #       "maximum": float,   # Celsius
+                    #       "mean":    float,   # Celsius
+                    #       "standard_deviation": float
+                    #     },
+                    #     "overall_temperature_distribution": [...],
+                    #     ...
+                    #   }
+                    # }
                     heatmap_data = tool_result.data.get("heatmap", {})
-                    stats = heatmap_data.get("stats_data", heatmap_data.get("temperature_stats", {}))
-                    max_val = stats.get("max") or stats.get("max_temperature")
-                    mean_val = stats.get("mean") or stats.get("mean_temperature")
-                    
+                    stats_data = heatmap_data.get("stats_data", {})
+                    temp_stats = stats_data.get("temperature_stats", {})
+
+                    max_val = temp_stats.get("maximum")
+                    min_val = temp_stats.get("minimum")
+                    mean_val = temp_stats.get("mean")
+
                     if max_val is not None:
-                        observed_data["max_temperature"] = max_val
+                        observed_data["max_temperature"] = round(float(max_val), 2)
+                    if min_val is not None:
+                        observed_data["min_temperature"] = round(float(min_val), 2)
                     if mean_val is not None:
-                        observed_data["mean_temperature"] = mean_val
-                        
-                    # Fallback check under env_params
-                    env_params = tool_result.data.get("env_params", {})
-                    # If we got hourly heat index, take maximum
-                    h_idx_c = env_params.get("heat_index_celsius", {})
-                    if h_idx_c:
-                        vals = [v for v in h_idx_c.values() if v is not None]
-                        if vals:
-                            observed_data["temperature"] = max(vals)
+                        observed_data["mean_temperature"] = round(float(mean_val), 2)
+
+                    # Also store overall distribution for richer output
+                    dist = stats_data.get("overall_temperature_distribution", [])
+                    if dist:
+                        observed_data["temperature_distribution"] = dist
+
+
 
                 elif tool_name == "FortyGuardEnvTool":
                     env_params = tool_result.data.get("env_params", {})
@@ -257,7 +285,12 @@ class AgentOrchestrator:
             observed_data["latitude"] = latitude
             observed_data["longitude"] = longitude
 
-        decision_res = self.decision_layer.evaluate(evidence, observed_data)
+        decision_res = self.decision_layer.evaluate(
+            evidence,
+            observed_data,
+            crop=params.get("crop", ""),
+            stage=params.get("crop_stage", "")
+        )
         
         # Explain missing tools in partial workflow
         if overall_status == "partial":
@@ -298,6 +331,7 @@ class AgentOrchestrator:
             "findings": decision_res["findings"],
             "risk_assessment": decision_res["risk_assessment"],
             "recommendations": decision_res["recommendations"],
+            "narrative": decision_res.get("narrative", ""),
             "sources": sources_list,
             "audit_trace": logger.format_trace_for_display()
         }

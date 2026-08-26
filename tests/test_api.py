@@ -390,6 +390,138 @@ class TestAPIEndpoints(unittest.TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertNotIn("secret_key_12345", resp.text)
 
+    # ── Phase 4.4 Readiness Tests: Map Pin Coordinates & CORS ──────────────────
+
+    def test_analyze_explicit_coordinates_accepted(self):
+        """Explicit map pin coordinates (lat/lon) must be preserved in location response."""
+        import os
+        from unittest.mock import patch
+
+        with patch.dict(os.environ, {"DEMO_MODE": "true"}):
+            payload = {
+                "location": "Custom Field Location",
+                "latitude": 33.4484,
+                "longitude": -112.0740,
+                "crop": "Tomato",
+                "crop_stage": "flowering",
+                "question": "Assess tomato heat risk in Phoenix during flowering.",
+            }
+            resp = self.client.post("/analyze", json=payload)
+            self.assertEqual(resp.status_code, 200)
+            data = resp.json()
+
+            # Location must contain exact map coordinates
+            self.assertEqual(data["location"]["latitude"], 33.4484)
+            self.assertEqual(data["location"]["longitude"], -112.0740)
+            self.assertEqual(data["location"]["address"], "Custom Field Location")
+
+    def test_analyze_explicit_coordinates_bypass_geocoding(self):
+        """When explicit coordinates are supplied, GeocodingTool uses Map Pin Input source."""
+        import os
+        from unittest.mock import patch
+
+        with patch.dict(os.environ, {"DEMO_MODE": "true"}):
+            payload = {
+                "location": "Farm Pin",
+                "latitude": 34.0522,
+                "longitude": -118.2437,
+                "crop": "Tomato",
+                "question": "Assess heat risk for farm pin location.",
+            }
+            resp = self.client.post("/analyze", json=payload)
+            self.assertEqual(resp.status_code, 200)
+            data = resp.json()
+
+            self.assertEqual(data["location"]["latitude"], 34.0522)
+            self.assertEqual(data["location"]["longitude"], -118.2437)
+
+            # Tool call log must record Map Pin Input source for GeocodingTool
+            geo_calls = [tc for tc in data["tool_calls"] if tc["tool"] == "GeocodingTool"]
+            self.assertGreater(len(geo_calls), 0)
+            self.assertEqual(geo_calls[0]["source"], "Map Pin Input")
+
+    def test_analyze_latitude_validation_422(self):
+        """Latitude out of range [-90, 90] must return HTTP 422."""
+        for invalid_lat in [91.0, -91.0, 100.5]:
+            payload = {
+                "location": "Phoenix, AZ",
+                "latitude": invalid_lat,
+                "longitude": -112.0740,
+                "crop": "Tomato",
+                "question": "Assess heat risk.",
+            }
+            resp = self.client.post("/analyze", json=payload)
+            self.assertEqual(resp.status_code, 422)
+            data = resp.json()
+            self.assertEqual(data["error"]["code"], "VALIDATION_ERROR")
+            fields = [d["field"] for d in data["error"]["details"]]
+            self.assertIn("latitude", fields)
+
+    def test_analyze_longitude_validation_422(self):
+        """Longitude out of range [-180, 180] must return HTTP 422."""
+        for invalid_lon in [181.0, -181.0, 200.0]:
+            payload = {
+                "location": "Phoenix, AZ",
+                "latitude": 33.4484,
+                "longitude": invalid_lon,
+                "crop": "Tomato",
+                "question": "Assess heat risk.",
+            }
+            resp = self.client.post("/analyze", json=payload)
+            self.assertEqual(resp.status_code, 422)
+            data = resp.json()
+            self.assertEqual(data["error"]["code"], "VALIDATION_ERROR")
+            fields = [d["field"] for d in data["error"]["details"]]
+            self.assertIn("longitude", fields)
+
+    def test_analyze_partial_coordinates_rejected_422(self):
+        """Partial coordinates (only latitude or only longitude) must return HTTP 422."""
+        payload_lat_only = {
+            "location": "Farm Pin",
+            "latitude": 33.4484,
+            "longitude": None,
+            "crop": "Tomato",
+            "question": "Assess heat risk for farm pin location.",
+        }
+        resp1 = self.client.post("/analyze", json=payload_lat_only)
+        self.assertEqual(resp1.status_code, 422)
+
+        payload_lon_only = {
+            "location": "Farm Pin",
+            "latitude": None,
+            "longitude": -112.0740,
+            "crop": "Tomato",
+            "question": "Assess heat risk for farm pin location.",
+        }
+        resp2 = self.client.post("/analyze", json=payload_lon_only)
+        self.assertEqual(resp2.status_code, 422)
+
+    def test_cors_headers_present_for_allowed_origins(self):
+        """OPTIONS preflight and POST requests from allowed local origins return Access-Control-Allow-Origin header."""
+        allowed_origin = "http://localhost:5173"
+
+        # OPTIONS preflight request
+        headers = {
+            "Origin": allowed_origin,
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "Content-Type",
+        }
+        resp = self.client.options("/analyze", headers=headers)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.headers.get("access-control-allow-origin"), allowed_origin)
+
+        # POST request with Origin
+        post_headers = {"Origin": allowed_origin}
+        payload = {
+            "location": "Phoenix, AZ",
+            "crop": "Tomato",
+            "question": "Assess heat risk.",
+        }
+        resp_post = self.client.post("/analyze", json=payload, headers=post_headers)
+        self.assertEqual(resp_post.headers.get("access-control-allow-origin"), allowed_origin)
+
 
 if __name__ == "__main__":
     unittest.main()
+
+

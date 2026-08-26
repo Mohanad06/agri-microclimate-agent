@@ -138,6 +138,66 @@ Open `notebooks/00_setup.ipynb` and run every cell top-to-bottom. If the last ce
 
 ---
 
+## Running the Full-Stack Application (Backend & Frontend)
+
+The project includes a complete full-stack web interface featuring a **FastAPI Agent Backend** and a modern **Vite + React Interactive Dashboard**.
+
+### Prerequisites for Web App
+- **Python 3.10+** (for FastAPI backend)
+- **Node.js 18+ & npm** (for React frontend)
+- `.env` file in project root with valid `FORTYGUARD_API_KEY`
+
+---
+
+### Step 1: Start the Backend Server (FastAPI)
+
+1. Open a terminal and navigate to the project root:
+   ```bash
+   cd agri-microclimate-agent
+   ```
+2. Activate your Python virtual environment:
+   ```bash
+   # Windows
+   venv\Scripts\activate
+
+   # macOS / Linux
+   source venv/bin/activate
+   ```
+3. Launch the FastAPI server with auto-reload:
+   ```bash
+   python -m uvicorn app.main:app --reload
+   ```
+4. Verification:
+   - Backend API running at: `http://127.0.0.1:8000`
+   - Interactive Swagger API Docs: `http://127.0.0.1:8000/docs`
+   - Health Check: `http://127.0.0.1:8000/health`
+   - Dynamic Crops Endpoint: `http://127.0.0.1:8000/crops`
+
+---
+
+### Step 2: Start the Frontend Dashboard (React + Vite)
+
+1. Open a **second terminal window** and navigate to the `frontend/` folder:
+   ```bash
+   cd agri-microclimate-agent/frontend
+   ```
+2. Install npm dependencies (first-time setup):
+   ```bash
+   npm install
+   ```
+3. Ensure `frontend/.env` contains the backend URL:
+   ```env
+   VITE_API_BASE_URL=http://127.0.0.1:8000
+   ```
+4. Launch the Vite development server:
+   ```bash
+   npm run dev
+   ```
+5. Access the Web Application in your browser:
+   - Application URL: **`http://localhost:5173`** (or `http://127.0.0.1:5173`)
+
+---
+
 ## Using the Python client directly
 
 Outside a notebook:

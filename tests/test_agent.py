@@ -37,7 +37,7 @@ class TestAgentOrchestrator(unittest.TestCase):
             "crop": "Tomato", "crop_stage": "flowering", "location": "Phoenix, AZ",
             "history_requested": False, "is_pure_agronomic": False
         })
-        self.assertEqual(plan_a, ["GeocodingTool", "AgronomicEvidenceTool", "FortyGuardTool"])
+        self.assertEqual(plan_a, ["GeocodingTool", "AgronomicEvidenceTool", "FortyGuardTool", "NasaPowerTool"])
         
         # Scenario B planning
         plan_b = planner.generate_plan({

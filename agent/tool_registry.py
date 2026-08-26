@@ -80,18 +80,39 @@ class FortyGuardTool(BaseTool):
     def description(self) -> str:
         return "Retrieves hyperlocal heatmaps (exceedance, persistence, TCM) and environmental parameters."
 
-    def _make_square_aoi(self, latitude: float, longitude: float, size_degrees: float = 0.005) -> Dict[str, Any]:
+    def _make_square_aoi(self, latitude: float, longitude: float, size_degrees: float = 0.07) -> Dict[str, Any]:
+        """Build a ~7km x ~7km GeoJSON FeatureCollection polygon around a point.
+
+        FortyGuard's heatmap endpoint expects FeatureCollection format matching
+        the samples.py schema, and requires a minimum polygon area of ~1 km².
+        """
         half = size_degrees / 2.0
         return {
-            "type": "Polygon",
-            "coordinates": [[
-                [longitude - half, latitude - half],
-                [longitude + half, latitude - half],
-                [longitude + half, latitude + half],
-                [longitude - half, latitude + half],
-                [longitude - half, latitude - half]
-            ]]
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": {},
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [[
+                            [longitude - half, latitude - half],
+                            [longitude + half, latitude - half],
+                            [longitude + half, latitude + half],
+                            [longitude - half, latitude + half],
+                            [longitude - half, latitude - half],
+                        ]],
+                    },
+                }
+            ],
         }
+
+    @staticmethod
+    def _fmt_date(date_str: str) -> str:
+        """Convert YYYYMMDD → YYYY-MM-DD if needed (FortyGuard API requirement)."""
+        if isinstance(date_str, str) and len(date_str) == 8 and date_str.isdigit():
+            return f"{date_str[:4]}-{date_str[4:6]}-{date_str[6:]}"
+        return date_str
 
     def execute(
         self,
@@ -138,34 +159,42 @@ class FortyGuardTool(BaseTool):
             filter_type = 4 if end_date else 3
             
             if run_env_params:
-                # Call environmental parameters
-                env_res = client.environmental_parameters(
-                    latitude=latitude,
-                    longitude=longitude,
-                    temperature=temperature,
-                    start_date=start_date,
-                    filter_type=filter_type,
-                    end_date=end_date
-                )
-                # Unwrap wait_for result
-                if isinstance(env_res, dict):
-                    data["env_params"] = env_res.get("result", env_res)
-                else:
-                    data["env_params"] = env_res
+                # Call environmental parameters (optional enrichment)
+                try:
+                    env_res = client.environmental_parameters(
+                        latitude=latitude,
+                        longitude=longitude,
+                        temperature=temperature,
+                        start_date=start_date,
+                        filter_type=filter_type,
+                        end_date=end_date
+                    )
+                    # Unwrap wait_for result
+                    if isinstance(env_res, dict):
+                        data["env_params"] = env_res.get("result", env_res)
+                    else:
+                        data["env_params"] = env_res
+                except Exception:
+                    # Non-fatal: if FortyGuard env_params endpoint fails (e.g. HTTP 500 for single day),
+                    # allow create_heatmap to proceed and retrieve primary thermal data.
+                    pass
 
-            # Call heatmap creation
+            # Call heatmap creation — convert dates to YYYY-MM-DD format
             polygon_aoi = self._make_square_aoi(latitude, longitude)
+            fmt_start = self._fmt_date(start_date)
+            fmt_end = self._fmt_date(end_date) if end_date else None
+
             heatmap_res = client.create_heatmap(
                 polygon_aoi=polygon_aoi,
-                start_date=start_date,
+                start_date=fmt_start,
                 filter_type=filter_type,
-                end_date=end_date,
+                end_date=fmt_end,
                 analytic_type=analytic_type,
                 threshold=threshold,
                 direction=direction,
                 verbose=False
             )
-            
+
             if isinstance(heatmap_res, dict):
                 data["heatmap"] = heatmap_res.get("result", heatmap_res)
             else:

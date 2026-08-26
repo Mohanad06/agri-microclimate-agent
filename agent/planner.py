@@ -7,8 +7,8 @@ class Planner:
         """Sequence tools dynamically based on parameter flags."""
         plan = []
         
-        # Scenario C: Pure agronomic query
-        if params.get("is_pure_agronomic", False) and not params.get("location"):
+        # Scenario C: Pure agronomic query (if is_pure_agronomic and no explicit coordinates provided)
+        if params.get("is_pure_agronomic", False) and not params.get("has_explicit_coords", False):
             plan.append("AgronomicEvidenceTool")
             return plan
             
@@ -22,11 +22,12 @@ class Planner:
             
         # 3. Environmental Data
         if params.get("history_requested", False):
-            # Climatology and rainfall context
+            # Historical climatology path: NASA POWER only (long-term context)
             plan.append("NasaPowerTool")
         else:
-            # Current hyperlocal heat index/exceedance
+            # Standard analysis path: FortyGuard hyperlocal heat + NASA POWER precip/soil
             plan.append("FortyGuardTool")
+            plan.append("NasaPowerTool")
 
         # 4. Point Environmental Parameters (if environmental context is explicitly requested)
         if params.get("env_requested", False):

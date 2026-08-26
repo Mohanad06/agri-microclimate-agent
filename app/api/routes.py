@@ -185,7 +185,13 @@ def analyze(request: AnalysisRequest) -> AnalysisResponse:
     mock_payload = build_demo_mock_payload() if demo_mode else None
 
     try:
-        raw_result = _orchestrator.execute_goal(goal, mock_data=mock_payload)
+        raw_result = _orchestrator.execute_goal(
+            goal,
+            mock_data=mock_payload,
+            latitude=request.latitude,
+            longitude=request.longitude,
+            location_name=request.location,
+        )
     except Exception as exc:
         # Surface unexpected orchestrator errors via safe AgentError handler (HTTP 500)
         # Internal traceback/implementation details are never leaked.
