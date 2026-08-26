@@ -27,5 +27,10 @@ class Planner:
         else:
             # Current hyperlocal heat index/exceedance
             plan.append("FortyGuardTool")
+
+        # 4. Point Environmental Parameters (if environmental context is explicitly requested)
+        if params.get("env_requested", False):
+            plan.append("FortyGuardEnvTool")
             
         return plan
+

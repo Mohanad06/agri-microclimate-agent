@@ -193,5 +193,52 @@ class TestAgentOrchestrator(unittest.TestCase):
         self.assertEqual(result_safe["risk_assessment"]["level"], "LOW")
         self.assertEqual(result_safe["findings"][0]["status"], "safe")
 
+    # ── FortyGuardEnvTool Specific Unit Tests ─────────────────────────────────
+    def test_fortyguard_env_tool_structure_and_no_key_failure(self):
+        from agent.tool_registry import FortyGuardEnvTool
+        tool = FortyGuardEnvTool()
+        self.assertEqual(tool.name, "FortyGuardEnvTool")
+        self.assertIn("environmental parameters", tool.description.lower())
+        
+        # Test failure when FORTYGUARD_API_KEY is unset/mocked empty
+        import os
+        orig_key = os.environ.pop("FORTYGUARD_API_KEY", None)
+        try:
+            res = tool.execute(latitude=33.44, longitude=-112.07, start_date="2024-07-01")
+            self.assertEqual(res.status, "failed")
+            self.assertEqual(res.tool, "FortyGuardEnvTool")
+            self.assertIn("FORTYGUARD_API_KEY environment variable is not configured", res.error)
+            self.assertEqual(res.source, "FortyGuard API")
+            # Verify secret key is NOT present anywhere in res
+            self.assertNotIn("secret", str(res).lower())
+        finally:
+            if orig_key:
+                os.environ["FORTYGUARD_API_KEY"] = orig_key
+
+    def test_environmental_context_planning(self):
+        planner = Planner()
+        # Environmental parameter goal
+        plan_env = planner.generate_plan({
+            "crop": "Tomato", "crop_stage": "flowering", "location": "Phoenix, AZ",
+            "history_requested": False, "env_requested": True, "is_pure_agronomic": False
+        })
+        self.assertEqual(plan_env, ["GeocodingTool", "AgronomicEvidenceTool", "FortyGuardTool", "FortyGuardEnvTool"])
+
+    def test_e2e_demo_mode_with_env_params(self):
+        from app.demo_data import build_demo_mock_payload
+        orchestrator = AgentOrchestrator()
+        mock_payload = build_demo_mock_payload()
+        
+        goal = "Assess humidity, heat index, and solar irradiance for tomato heat risk in Phoenix during flowering."
+        res = orchestrator.execute_goal(goal, mock_data=mock_payload)
+        
+        self.assertEqual(res["status"], "completed")
+        self.assertIn("FortyGuardEnvTool", res["plan"])
+        # Verify ToolResult demo cache source tag
+        env_tool_call = [tc for tc in res["tool_calls"] if tc["tool"] == "FortyGuardEnvTool"][0]
+        self.assertEqual(env_tool_call["status"], "success")
+        self.assertEqual(env_tool_call["source"], "FortyGuard (Demo Cache)")
+
 if __name__ == "__main__":
     unittest.main()
+

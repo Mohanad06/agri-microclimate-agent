@@ -1,3 +1,4 @@
+import os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Dict, Any, Optional, List
@@ -189,6 +190,97 @@ class FortyGuardTool(BaseTool):
                 error=str(e)
             )
 
+class FortyGuardEnvTool(BaseTool):
+    @property
+    def name(self) -> str:
+        return "FortyGuardEnvTool"
+
+    @property
+    def description(self) -> str:
+        return "Retrieves point environmental parameters (relative humidity, wet-bulb temperature, heat index, solar irradiance) from FortyGuard."
+
+    def execute(
+        self,
+        latitude: float,
+        longitude: float,
+        start_date: str,
+        end_date: Optional[str] = None,
+        temperature: float = 30.0,
+        analysis: Optional[List[str]] = None
+    ) -> ToolResult:
+        inputs = {
+            "latitude": latitude,
+            "longitude": longitude,
+            "start_date": start_date,
+            "end_date": end_date,
+            "temperature": temperature,
+            "analysis": analysis
+        }
+
+        api_key = os.getenv("FORTYGUARD_API_KEY")
+        if not api_key:
+            return ToolResult(
+                tool=self.name,
+                status="failed",
+                inputs=inputs,
+                data={},
+                source="FortyGuard API",
+                reference="Enterprise API Connection /v1/env_params",
+                error="FORTYGUARD_API_KEY environment variable is not configured."
+            )
+
+        try:
+            client = FortyGuardClient()
+            filter_type = 4 if end_date else 3
+
+            # Standardize YYYY-MM-DD format if passed as 8-digit YYYYMMDD
+            s_date = start_date
+            if isinstance(start_date, str) and len(start_date) == 8 and start_date.isdigit():
+                s_date = f"{start_date[:4]}-{start_date[4:6]}-{start_date[6:]}"
+
+            e_date = end_date
+            if isinstance(end_date, str) and len(end_date) == 8 and end_date.isdigit():
+                e_date = f"{end_date[:4]}-{end_date[4:6]}-{end_date[6:]}"
+
+            agri_analysis = analysis or [
+                "heat_index_celsius",
+                "apparent_temperature_celsius",
+                "wet_bulb_temperature_celsius",
+                "relative_humidity_percent",
+                "solar_irradiance"
+            ]
+
+            env_res = client.environmental_parameters(
+                latitude=latitude,
+                longitude=longitude,
+                temperature=temperature,
+                start_date=s_date,
+                filter_type=filter_type,
+                end_date=e_date,
+                analysis=agri_analysis
+            )
+
+            res_data = env_res.get("result", env_res) if isinstance(env_res, dict) else env_res
+
+            return ToolResult(
+                tool=self.name,
+                status="success",
+                inputs=inputs,
+                data={"env_params": res_data},
+                source="FortyGuard",
+                reference="Task API /v1/env_params"
+            )
+        except Exception as e:
+            return ToolResult(
+                tool=self.name,
+                status="failed",
+                inputs=inputs,
+                data={},
+                source="FortyGuard",
+                reference="Task API /v1/env_params",
+                error=str(e)
+            )
+
 class NasaPowerTool(BaseTool):
     @property
     def name(self) -> str:
@@ -297,6 +389,7 @@ class ToolRegistry:
         # Auto-register core tools
         self.register(GeocodingTool())
         self.register(FortyGuardTool())
+        self.register(FortyGuardEnvTool())
         self.register(NasaPowerTool())
         self.register(AgronomicEvidenceTool())
 
@@ -310,3 +403,4 @@ class ToolRegistry:
 
     def list_tools(self) -> List[Dict[str, str]]:
         return [{"name": name, "description": t.description} for name, t in self._tools.items()]
+

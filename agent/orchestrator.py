@@ -111,6 +111,16 @@ class AgentOrchestrator:
                             run_env_params=True
                         )
                         
+                    elif tool_name == "FortyGuardEnvTool":
+                        lat = latitude or 36.7378
+                        lon = longitude or -119.7871
+                        tool_result = tool.execute(
+                            latitude=lat,
+                            longitude=lon,
+                            start_date=params["start_date"],
+                            end_date=params["end_date"]
+                        )
+
                     elif tool_name == "NasaPowerTool":
                         lat = latitude or 36.7378
                         lon = longitude or -119.7871
@@ -175,6 +185,34 @@ class AgentOrchestrator:
                         vals = [v for v in h_idx_c.values() if v is not None]
                         if vals:
                             observed_data["temperature"] = max(vals)
+
+                elif tool_name == "FortyGuardEnvTool":
+                    env_params = tool_result.data.get("env_params", {})
+                    h_idx_c = env_params.get("heat_index_celsius", {})
+                    if isinstance(h_idx_c, dict) and h_idx_c:
+                        vals = [v for v in h_idx_c.values() if v is not None]
+                        if vals:
+                            observed_data["heat_index"] = max(vals)
+                            if "temperature" not in observed_data and "max_temperature" not in observed_data:
+                                observed_data["temperature"] = max(vals)
+
+                    rel_hum = env_params.get("relative_humidity_percent", {})
+                    if isinstance(rel_hum, dict) and rel_hum:
+                        vals = [v for v in rel_hum.values() if v is not None]
+                        if vals:
+                            observed_data["relative_humidity"] = sum(vals) / len(vals)
+
+                    wet_bulb = env_params.get("wet_bulb_temperature_celsius", {})
+                    if isinstance(wet_bulb, dict) and wet_bulb:
+                        vals = [v for v in wet_bulb.values() if v is not None]
+                        if vals:
+                            observed_data["wet_bulb_temperature"] = max(vals)
+
+                    solar = env_params.get("solar_irradiance", {})
+                    if isinstance(solar, dict) and solar:
+                        vals = [v for v in solar.values() if v is not None]
+                        if vals:
+                            observed_data["solar_irradiance"] = max(vals)
                             
                 elif tool_name == "NasaPowerTool":
                     nasa_params = tool_result.data.get("parameters", {})

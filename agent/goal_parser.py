@@ -66,14 +66,18 @@ class GoalParser:
         history_words = ["historical", "climatology", "past", "history", "last July", "last year", "average"]
         history_requested = any(hw in lower_goal for hw in history_words)
 
-        # 5. Detect Pure Agronomic request (no environmental data required)
+        # 5. Detect Environmental Parameters request
+        env_words = ["humidity", "relative humidity", "wet bulb", "solar", "irradiance", "heat index", "air quality", "aqi", "environmental", "microclimate", "evapotranspiration", "atmospheric"]
+        env_requested = any(ew in lower_goal for ew in env_words)
+
+        # 6. Detect Pure Agronomic request (no environmental data required)
         pure_agronomic_words = ["threshold for", "germination temperature", "safe range", "stress temperature", "what temperature", "agronomic threshold"]
         is_pure_agronomic = any(paw in lower_goal for paw in pure_agronomic_words)
         # If no location is found, it is also likely pure agronomic query
         if not parsed_location:
             is_pure_agronomic = True
 
-        # 6. Parse time period (look for YYYY or months)
+        # 7. Parse time period (look for YYYY or months)
         # For simplicity in testing/E2E, we default to a standard window (e.g. last month/current date) if none specified
         start_date = "20240701"
         end_date = "20240731" if history_requested else None
@@ -89,6 +93,7 @@ class GoalParser:
             "crop_stage": parsed_stage,
             "location": parsed_location,
             "history_requested": history_requested,
+            "env_requested": env_requested,
             "is_pure_agronomic": is_pure_agronomic,
             "start_date": start_date,
             "end_date": end_date

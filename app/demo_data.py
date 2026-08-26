@@ -59,6 +59,35 @@ def get_demo_fortyguard_result() -> ToolResult:
     )
 
 
+def get_demo_fortyguard_env_result() -> ToolResult:
+    """Deterministic FortyGuard EnvParams mock result."""
+    return ToolResult(
+        tool="FortyGuardEnvTool",
+        status="success",
+        inputs={
+            "temperature": 30.0,
+            "analysis": [
+                "heat_index_celsius",
+                "apparent_temperature_celsius",
+                "wet_bulb_temperature_celsius",
+                "relative_humidity_percent",
+                "solar_irradiance"
+            ]
+        },
+        data={
+            "env_params": {
+                "heat_index_celsius": {"14:00": 34.5},
+                "apparent_temperature_celsius": {"14:00": 33.8},
+                "wet_bulb_temperature_celsius": {"14:00": 24.2},
+                "relative_humidity_percent": {"14:00": 45.0},
+                "solar_irradiance": {"14:00": 850.0}
+            }
+        },
+        source="FortyGuard (Demo Cache)",
+        reference="Simulated Environmental Parameters API /v1/env_params"
+    )
+
+
 def get_demo_nasa_power_result() -> ToolResult:
     """Deterministic NASA POWER mock result with root zone soil wetness proxy."""
     return ToolResult(
@@ -81,5 +110,7 @@ def build_demo_mock_payload() -> Dict[str, ToolResult]:
     return {
         "GeocodingTool": get_demo_geocoding_result(),
         "FortyGuardTool": get_demo_fortyguard_result(),
+        "FortyGuardEnvTool": get_demo_fortyguard_env_result(),
         "NasaPowerTool": get_demo_nasa_power_result()
     }
+
