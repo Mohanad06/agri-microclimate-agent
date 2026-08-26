@@ -91,6 +91,11 @@ class TestAgentOrchestrator(unittest.TestCase):
             "FortyGuardTool": ToolResult(
                 tool="FortyGuardTool", status="failed", inputs={}, data={},
                 source="FortyGuard", reference="Test", error="API Timeout Error"
+            ),
+            "NasaPowerTool": ToolResult(
+                tool="NasaPowerTool", status="success", inputs={},
+                data={"parameters": {"PRECTOTCORR": {"20240710": 0.0}, "GWETROOT": {"20240710": 0.18}}},
+                source="NASA POWER", reference="Test"
             )
         }
         
@@ -100,9 +105,9 @@ class TestAgentOrchestrator(unittest.TestCase):
         self.assertEqual(res["status"], "partial")
         self.assertEqual(res["tool_calls"][2]["status"], "failed")
         self.assertIn("API Timeout Error", res["tool_calls"][2]["error"])
-        # Should still output geocoding coordinates and RAG references
+        # Should still output geocoding coordinates, NASA POWER climatology, and RAG references
         self.assertEqual(res["location"]["latitude"], 33.44)
-        self.assertEqual(len(res["sources"]), 2) # Geocoder + RAG
+        self.assertEqual(len(res["sources"]), 3) # Geocoder + NASA POWER + RAG
 
     def test_e2e_almond_mild_stress_grounding(self):
         orchestrator = AgentOrchestrator()
@@ -137,7 +142,7 @@ class TestAgentOrchestrator(unittest.TestCase):
         
         res = orchestrator.execute_goal("What was the historical climate context for almond water deficit in Fresno last July?", mock_data=mock_data)
         self.assertEqual(res["status"], "completed")
-        self.assertEqual(len(res["findings"]), 1)
+        self.assertEqual(len(res["findings"]), 2) # 1 RAG soil moisture violation finding + 1 NASA precipitation observation finding
         # Should report low soil moisture violation against the 0.20 RAG deficit boundary
         self.assertEqual(res["findings"][0]["status"], "violated")
         self.assertEqual(res["risk_assessment"]["level"], "HIGH")
@@ -222,7 +227,7 @@ class TestAgentOrchestrator(unittest.TestCase):
             "crop": "Tomato", "crop_stage": "flowering", "location": "Phoenix, AZ",
             "history_requested": False, "env_requested": True, "is_pure_agronomic": False
         })
-        self.assertEqual(plan_env, ["GeocodingTool", "AgronomicEvidenceTool", "FortyGuardTool", "FortyGuardEnvTool"])
+        self.assertEqual(plan_env, ["GeocodingTool", "AgronomicEvidenceTool", "FortyGuardTool", "NasaPowerTool", "FortyGuardEnvTool"])
 
     def test_e2e_demo_mode_with_env_params(self):
         from app.demo_data import build_demo_mock_payload

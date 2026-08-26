@@ -35,23 +35,23 @@ function App() {
 
       {/* Main Page Layout */}
       <main className="page-container">
-        {/* Intro Hero Banner */}
-        <div
-          className="card glass-card"
-          style={{
-            marginBottom: '1.5rem',
-            background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(16, 185, 129, 0.05))',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-            <Sparkles size={20} color="#0ea5e9" />
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0 }}>
-              Autonomous Agricultural Temperature Intelligence
+        {/* Hero Introduction Banner */}
+        <div className="hero-banner">
+          <div className="hero-header">
+            <Sparkles size={22} color="#0ea5e9" />
+            <h2 className="hero-title">
+              Hyperlocal Climate Intelligence for Smarter Farming
             </h2>
           </div>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', margin: 0, maxWidth: '900px' }}>
-            Translating natural language agricultural goals into grounded, citation-backed heat risk assessments using FortyGuard hyperlocal thermal forecasting, NASA POWER climatology, and vector RAG agronomic evidence.
+          <p className="hero-description">
+            Transforming natural language agricultural goals into explainable, citation-backed decision support. Fusing FortyGuard hyperlocal thermal forecasting, NASA POWER satellite climatology, and vector RAG agronomic evidence.
           </p>
+          <div className="hero-pills">
+            <span className="hero-pill primary">FortyGuard Hyperlocal Thermal API</span>
+            <span className="hero-pill accent">NASA POWER Climatology</span>
+            <span className="hero-pill">Vector Agronomic RAG</span>
+            <span className="hero-pill">Autonomous Agentic Orchestration</span>
+          </div>
         </div>
 
         {/* Dashboard Grid */}

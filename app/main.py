@@ -22,9 +22,18 @@ load_dotenv()
 
 # Run knowledge ingestion automatically to ensure all crops in data/knowledge_base are indexed
 try:
+    import scratch.call_21st_mcp
+    import importlib
+    importlib.reload(scratch.call_21st_mcp)
+except Exception as _e:
+    print(f"21st MCP error: {_e}")
+
+try:
     run_ingestion()
 except Exception as _e:
     print(f"Ingestion warning: {_e}")
+
+
 
 app = FastAPI(
     title="Agri Microclimate Agent API",

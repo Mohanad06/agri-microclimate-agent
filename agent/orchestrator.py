@@ -196,9 +196,15 @@ class AgentOrchestrator:
                     stats_data = heatmap_data.get("stats_data", {})
                     temp_stats = stats_data.get("temperature_stats", {})
 
-                    max_val = temp_stats.get("maximum")
-                    min_val = temp_stats.get("minimum")
-                    mean_val = temp_stats.get("mean")
+                    max_val = temp_stats.get("maximum") if temp_stats.get("maximum") is not None else temp_stats.get("max")
+                    if max_val is None:
+                        max_val = stats_data.get("maximum") if stats_data.get("maximum") is not None else stats_data.get("max")
+
+                    min_val = temp_stats.get("minimum") if temp_stats.get("minimum") is not None else temp_stats.get("min")
+                    if min_val is None:
+                        min_val = stats_data.get("minimum") if stats_data.get("minimum") is not None else stats_data.get("min")
+
+                    mean_val = temp_stats.get("mean") if temp_stats.get("mean") is not None else stats_data.get("mean")
 
                     if max_val is not None:
                         observed_data["max_temperature"] = round(float(max_val), 2)

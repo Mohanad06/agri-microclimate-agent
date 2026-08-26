@@ -479,12 +479,14 @@ class DecisionLayer:
             reasoning = "Low risk detected. All observed environmental conditions satisfy agronomic thresholds."
 
         # ── Build rich action plan recommendations ─────────────────────────────
+        primary_chunk_id = evidence[0].get("chunk_id") if (evidence and isinstance(evidence[0], dict)) else None
+
         action_steps = self._get_action_plan(crop or "crop", stage or "growth", risk_level)
         recommendations = [
             {
                 "text": step,
                 "source_type": "derived_conclusion",
-                "reference_id": None,
+                "reference_id": primary_chunk_id,
                 "priority": "high" if risk_level == "HIGH" and i < 3 else "normal",
             }
             for i, step in enumerate(action_steps)

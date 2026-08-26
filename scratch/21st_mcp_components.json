@@ -1,0 +1,36 @@
+{
+  "get_component_24337": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "You've reached the free 21st component-code limit (2/day), resets 2026-08-27T00:00:00.000Z. Component code on 21st is paid; tell the user and share the upgrade link: https://21st.dev/pricing"
+        }
+      ],
+      "structuredContent": {
+        "locked": true,
+        "reason": "retrieval_limit_reached",
+        "limit": 2,
+        "resetAt": "2026-08-27T00:00:00.000Z",
+        "upgradeUrl": "https://21st.dev/pricing"
+      }
+    }
+  },
+  "search_logo_weather": {
+    "jsonrpc": "2.0",
+    "id": 2,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "No logos found for \"weather\"."
+        }
+      ],
+      "structuredContent": {
+        "results": []
+      }
+    }
+  }
+}

@@ -1,21 +1,22 @@
 import React from 'react';
 import { Thermometer, Sun, Droplets, Activity } from 'lucide-react';
+import MetricCard21st from './MetricCard21st.jsx';
 
 /**
- * Returns an appropriate Lucide icon for a given metric key.
+ * Returns an appropriate Lucide icon component for a given metric key.
  */
-function getMetricIcon(metricName) {
+function getMetricIconComponent(metricName) {
   const name = (metricName || '').toLowerCase();
   if (name.includes('max') || name.includes('sun') || name.includes('heat')) {
-    return <Sun size={12} color="#f59e0b" />;
+    return Sun;
   }
   if (name.includes('moisture') || name.includes('water') || name.includes('rain') || name.includes('precip')) {
-    return <Droplets size={12} color="#0ea5e9" />;
+    return Droplets;
   }
   if (name.includes('humidity')) {
-    return <Activity size={12} color="#10b981" />;
+    return Activity;
   }
-  return <Thermometer size={12} color="#0ea5e9" />;
+  return Thermometer;
 }
 
 /**
@@ -77,6 +78,7 @@ function formatMetricDisplay(item) {
 
 /**
  * FindingsGrid component for rendering environmental observation metrics.
+ * Uses 21st.dev Neomorphism Metric Cards.
  *
  * @param {Object} props
  * @param {Array} [props.findings=[]]
@@ -105,47 +107,30 @@ export function FindingsGrid({ findings = [] }) {
           <Thermometer size={18} color="#0ea5e9" />
           Environmental Observations
         </h3>
-        <span className="status-pill online">{findings.length} Metrics Evaluated</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span className="badge" style={{ background: 'rgba(14, 165, 233, 0.15)', color: '#38bdf8', border: '1px solid rgba(14, 165, 233, 0.3)' }}>
+            21st.dev UI #24337
+          </span>
+          <span className="status-pill online">{findings.length} Metrics</span>
+        </div>
       </div>
 
       <div className="metrics-grid">
         {findings.map((item, idx) => {
           const { label, value, unit, subtitle, explanation, status } = formatMetricDisplay(item);
-          const isViolated = status === 'violated';
-          const isWarning = status === 'warning';
+          const Icon = getMetricIconComponent(label);
 
           return (
-            <div key={idx} className="metric-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div>
-                <div className="metric-label">
-                  {getMetricIcon(label)}
-                  {label}
-                </div>
-                <div
-                  className="metric-value"
-                  style={{ color: isViolated ? '#ef4444' : isWarning ? '#f59e0b' : 'var(--text-primary)' }}
-                >
-                  {value} {unit}
-                </div>
-                {subtitle && <div className="metric-subtitle">{subtitle}</div>}
-              </div>
-
-              {explanation && (
-                <div
-                  style={{
-                    marginTop: '0.75rem',
-                    paddingTop: '0.5rem',
-                    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                    fontSize: '0.78rem',
-                    lineHeight: '1.35',
-                    color: isViolated ? '#fca5a5' : isWarning ? '#fde047' : 'var(--text-secondary)',
-                    fontStyle: 'italic',
-                  }}
-                >
-                  💡 {explanation}
-                </div>
-              )}
-            </div>
+            <MetricCard21st
+              key={idx}
+              title={label}
+              value={value}
+              unit={unit}
+              subtitle={subtitle}
+              explanation={explanation}
+              status={status}
+              icon={Icon}
+            />
           );
         })}
       </div>

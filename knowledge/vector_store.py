@@ -211,4 +211,10 @@ class VectorStore:
 
         # Sort by similarity score descending
         matches.sort(key=lambda x: x["score"], reverse=True)
+        
+        # If strict crop_stage filtering yielded 0 matches for a supported crop,
+        # fall back to searching all chunks for that crop so relevant agronomic evidence is not missed.
+        if not matches and crop_stage:
+            return self.search(query, crop=crop, crop_stage=None, topic=topic, top_k=top_k)
+
         return matches[:top_k]

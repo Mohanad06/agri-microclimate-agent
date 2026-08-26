@@ -1,0 +1,248 @@
+{
+  "search_metrics": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "5 result(s) across 21st.dev (metadata only).\n\n### [component] Neomorphism Metric Card  [id: 24337]\nby arunjdass\nA stunning Neomorphism style metric card featuring soft dynamic shadows, positive/negative trend indicators, and premium Framer Motion hover animations.\npreview: https://cdn.21st.dev/user_39o4wVmT0Y5zTgtujcn7Fxw3uiT/neomorphism-metric-card/default/preview.1786364252773.webp\ninstall: npx shadcn@latest add \"https://21st.dev/r/arunjdass/neomorphism-metric-card?api_key=$API_KEY_21ST\"\n\u2192 get the code: get_component({ id: 24337 })\n\n### [component] Card  [id: 7461]\nby ravikatiyar162\nStat Card\nThis card is designed to display a key metric, its title, and a percentage change from a previous period. It features a count-up animation for the main value and uses theme-aware colors for positive and negative trends.\npreview: https://cdn.21st.dev/ravikatiyar162/card-10/default/preview.1757830893277.png\ninstall: npx shadcn@latest add \"https://21st.dev/r/ravikatiyar162/card-10?api_key=$API_KEY_21ST\"\n\u2192 get the code: get_component({ id: 7461 })\n\n### [component] Stats  [id: 5450]\nby meschacirung\nHere is Stats component\npreview: https://cdn.21st.dev/meschacirung/stats/stats-metric/preview.1785191202349-a0d97a9a-33b7-4e87-a8e5-4c1951689142.png\ninstall: npx shadcn@latest add \"https://21st.dev/r/meschacirung/stats?api_key=$API_KEY_21ST\"\n\u2192 get the code: get_component({ id: 5450 })\n\n### [component] Progress Metric Card  [id: 15024]\nby makviesainte\nA KPI stat card pairing a large headline figure with a data-driven chart, rendered with Recharts and switchable between a smooth progression curve and bars.\npreview: https://cdn.21st.dev/makviesainte/progress-metric-card/default/preview.1782062854405.png\ninstall: npx shadcn@latest add \"https://21st.dev/r/makviesainte/progress-metric-card?api_key=$API_KEY_21ST\"\n\u2192 get the code: get_component({ id: 15024 })\n\n### [component] Stats Bento  [id: 25311]\nby uilayout.contact\nA responsive bento-grid stats section that highlights key metrics like market share, growth, awards, and ratings in mixed-size cards.\npreview: https://cdn.21st.dev/uilayout.contact/stats-bento/default/preview.1787227328895-88bfc5ed-4306-4d10-bf4c-078e98bcfe2b.png\ninstall: npx shadcn@latest add \"https://21st.dev/r/uilayout.contact/stats-bento?api_key=$API_KEY_21ST\"\n\u2192 get the code: get_component({ id: 25311 })\n\nMetadata is free. get_component (the code) is the PAID step - on the free tier it uses your daily retrieval quota (see get_usage)."
+        }
+      ],
+      "structuredContent": {
+        "results": [
+          {
+            "type": "component",
+            "id": 24337,
+            "name": "Neomorphism Metric Card",
+            "description": "A stunning Neomorphism style metric card featuring soft dynamic shadows, positive/negative trend indicators, and premium Framer Motion hover animations.",
+            "previewUrl": "https://cdn.21st.dev/user_39o4wVmT0Y5zTgtujcn7Fxw3uiT/neomorphism-metric-card/default/preview.1786364252773.webp",
+            "videoUrl": "https://cdn.21st.dev/user_39o4wVmT0Y5zTgtujcn7Fxw3uiT/neomorphism-metric-card/default/video.1786364048213.mp4",
+            "author": "arunjdass",
+            "authorImage": "https://vucvdpamtrjkzmubwlts.supabase.co/storage/v1/object/public/users/user_39o4wVmT0Y5zTgtujcn7Fxw3uiT/avatar.png",
+            "installCommand": "npx shadcn@latest add \"https://21st.dev/r/arunjdass/neomorphism-metric-card?api_key=$API_KEY_21ST\"",
+            "url": "https://21st.dev/@arunjdass/components/neomorphism-metric-card"
+          },
+          {
+            "type": "component",
+            "id": 7461,
+            "name": "Card",
+            "description": "Stat Card\nThis card is designed to display a key metric, its title, and a percentage change from a previous period. It features a count-up animation for the main value and uses theme-aware colors for positive and negative trends.",
+            "previewUrl": "https://cdn.21st.dev/ravikatiyar162/card-10/default/preview.1757830893277.png",
+            "videoUrl": "https://cdn.21st.dev/ravikatiyar162/card-10/default/video.1757830893277.mp4",
+            "author": "ravikatiyar162",
+            "authorImage": "https://vucvdpamtrjkzmubwlts.supabase.co/storage/v1/object/public/users/user_2zMtrqo9RMaaIn4f8F2z3oeY497/avatar.png",
+            "installCommand": "npx shadcn@latest add \"https://21st.dev/r/ravikatiyar162/card-10?api_key=$API_KEY_21ST\"",
+            "url": "https://21st.dev/@ravikatiyar162/components/card-10"
+          },
+          {
+            "type": "component",
+            "id": 5450,
+            "name": "Stats",
+            "description": "Here is Stats component",
+            "previewUrl": "https://cdn.21st.dev/meschacirung/stats/stats-metric/preview.1785191202349-a0d97a9a-33b7-4e87-a8e5-4c1951689142.png",
+            "videoUrl": null,
+            "author": "meschacirung",
+            "authorImage": "https://vucvdpamtrjkzmubwlts.supabase.co/storage/v1/object/public/users/user_2tUYFzCDCVfrMrVC3TfB9DUBAyx/avatar.png",
+            "installCommand": "npx shadcn@latest add \"https://21st.dev/r/meschacirung/stats?api_key=$API_KEY_21ST\"",
+            "url": "https://21st.dev/@meschacirung/components/stats"
+          },
+          {
+            "type": "component",
+            "id": 15024,
+            "name": "Progress Metric Card",
+            "description": "A KPI stat card pairing a large headline figure with a data-driven chart, rendered with Recharts and switchable between a smooth progression curve and bars.",
+            "previewUrl": "https://cdn.21st.dev/makviesainte/progress-metric-card/default/preview.1782062854405.png",
+            "videoUrl": "https://cdn.21st.dev/makviesainte/progress-metric-card/default/video.1782062854405.mp4",
+            "author": "makviesainte",
+            "authorImage": "https://vucvdpamtrjkzmubwlts.supabase.co/storage/v1/object/public/users/user_34NFsS8hd1hg1HU1ITd2sd7GyQW/avatar.png",
+            "installCommand": "npx shadcn@latest add \"https://21st.dev/r/makviesainte/progress-metric-card?api_key=$API_KEY_21ST\"",
+            "url": "https://21st.dev/@makviesainte/components/progress-metric-card"
+          },
+          {
+            "type": "component",
+            "id": 25311,
+            "name": "Stats Bento",
+            "description": "A responsive bento-grid stats section that highlights key metrics like market share, growth, awards, and ratings in mixed-size cards.",
+            "previewUrl": "https://cdn.21st.dev/uilayout.contact/stats-bento/default/preview.1787227328895-88bfc5ed-4306-4d10-bf4c-078e98bcfe2b.png",
+            "videoUrl": null,
+            "author": "uilayout.contact",
+            "authorImage": "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18yekFzdlBhQVN2bFB2ZVp5UmZ3dWhlaHFtZmoifQ",
+            "installCommand": "npx shadcn@latest add \"https://21st.dev/r/uilayout.contact/stats-bento?api_key=$API_KEY_21ST\"",
+            "url": "https://21st.dev/@uilayout.contact/components/stats-bento"
+          }
+        ]
+      }
+    }
+  },
+  "search_theme": {
+    "jsonrpc": "2.0",
+    "id": 2,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "No matching components, themes or templates found on 21st.dev."
+        }
+      ],
+      "structuredContent": {
+        "results": []
+      }
+    }
+  },
+  "inspiration": {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "8 project-aware inspiration result(s) for \"agricultural microclimate risk assessment dashboard dark glassmorphism\". Component code was not retrieved.\n\n1. [component] Glassmorphism Minimal Metrics (53%)\n   Matches glassmorphism\n   https://21st.dev/@moumensoliman/components/glassmorphism-minimal-metrics-block-shadcnui\n\n2. [component] Glare Cards (52%)\n   Matches dashboard\n   https://21st.dev/@daiwiikharihar/components/glare-cards\n\n3. [component] Glassmorphism Portfolio (52%)\n   Matches glassmorphism\n   https://21st.dev/@moumensoliman/components/glassmorphism-portfolio-block-shadcnui\n\n4. [component] Glowing Card (50%)\n   Matches dashboard, dark\n   https://21st.dev/@ravikatiyar162/components/glowing-card\n\n5. [component] AI Context Meter (49%)\n   Semantically relevant in the 21st catalog\n   https://21st.dev/@educalvolpz/components/ai-context-meter\n\n6. [component] Liquid  Weather glass (48%)\n   Semantically relevant in the 21st catalog\n   https://21st.dev/@uilayout.contact/components/liquid-weather-glass\n\n7. [component] Cloudscape (48%)\n   Semantically relevant in the 21st catalog\n   https://21st.dev/@amanshakya307/components/cloudscape\n\n8. [component] Globe Analytics (47%)\n   Semantically relevant in the 21st catalog\n   https://21st.dev/@shuding/components/cobe-globe-analytics"
+        }
+      ],
+      "structuredContent": {
+        "query": "agricultural microclimate risk assessment dashboard dark glassmorphism",
+        "contextApplied": false,
+        "feedbackId": "9240904c-ea9b-4281-b6fc-41298ba45ed9",
+        "results": [
+          {
+            "type": "component",
+            "id": 10614,
+            "name": "Glassmorphism Minimal Metrics",
+            "description": "Focused metric cards with glass surfaces, subtle motion, and concierge insight CTA banner",
+            "previewUrl": "https://cdn.21st.dev/larsen66/glassmorphism-minimal-metrics-block-shadcnui/default/preview.1773289513641.png",
+            "videoUrl": "https://cdn.21st.dev/larsen66/glassmorphism-minimal-metrics-block-shadcnui/default/video.1773289513641.mp4",
+            "author": "moumensoliman",
+            "authorImage": "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18zOEcwdmxDdElEYW1OaFJqUmhPWVhXQkU2NHIifQ",
+            "installCommand": "npx shadcn@latest add \"https://21st.dev/r/moumensoliman/glassmorphism-minimal-metrics-block-shadcnui?api_key=$API_KEY_21ST\"",
+            "url": "https://21st.dev/@moumensoliman/components/glassmorphism-minimal-metrics-block-shadcnui",
+            "source": "catalog",
+            "confidence": 0.53,
+            "rationale": [
+              "Matches glassmorphism"
+            ]
+          },
+          {
+            "type": "component",
+            "id": 10904,
+            "name": "Glare Cards",
+            "description": "A premium, interactive dashboard component featuring dynamic 3D tilting, cursor-responsive radial glare, and animated data visualizations.",
+            "previewUrl": "https://cdn.21st.dev/user_332oxzW8MyPod4IDIdKq9rbPYuk/glare-cards/default/preview.1787320620976.png",
+            "videoUrl": "https://cdn.21st.dev/user_332oxzW8MyPod4IDIdKq9rbPYuk/glare-cards/default/video.1787320632358.mp4",
+            "author": "daiwiikharihar",
+            "authorImage": "https://vucvdpamtrjkzmubwlts.supabase.co/storage/v1/object/public/users/user_332oxzW8MyPod4IDIdKq9rbPYuk/avatar.jpeg",
+            "installCommand": "npx shadcn@latest add \"https://21st.dev/r/daiwiikharihar/glare-cards?api_key=$API_KEY_21ST\"",
+            "url": "https://21st.dev/@daiwiikharihar/components/glare-cards",
+            "source": "catalog",
+            "confidence": 0.52,
+            "rationale": [
+              "Matches dashboard"
+            ]
+          },
+          {
+            "type": "component",
+            "id": 10616,
+            "name": "Glassmorphism Portfolio",
+            "description": "Personal portfolio spotlight with profile portrait, narrative highlights, and animated social links",
+            "previewUrl": "https://cdn.21st.dev/larsen66/glassmorphism-portfolio-block-shadcnui/default/preview.1773289414205.png",
+            "videoUrl": "https://cdn.21st.dev/larsen66/glassmorphism-portfolio-block-shadcnui/default/video.1773289414205.mp4",
+            "author": "moumensoliman",
+            "authorImage": "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18zOEcwdmxDdElEYW1OaFJqUmhPWVhXQkU2NHIifQ",
+            "installCommand": "npx shadcn@latest add \"https://21st.dev/r/moumensoliman/glassmorphism-portfolio-block-shadcnui?api_key=$API_KEY_21ST\"",
+            "url": "https://21st.dev/@moumensoliman/components/glassmorphism-portfolio-block-shadcnui",
+            "source": "catalog",
+            "confidence": 0.52,
+            "rationale": [
+              "Matches glassmorphism"
+            ]
+          },
+          {
+            "type": "component",
+            "id": 5328,
+            "name": "Glowing Card",
+            "description": "A sleek, glassmorphic stat display card with a subtle glowing effect that highlights the featured metric. The card uses soft light streaks, rounded corners, and a dark translucent background to create a modern, futuristic look. Perfect for dashboards, analytics tools, and live data displays to showcase key stats like views, likes, or revenue in an eye-catching way.",
+            "previewUrl": "https://cdn.21st.dev/ravikatiyar162/glowing-card/default/preview.1755200622157.png",
+            "videoUrl": "https://cdn.21st.dev/ravikatiyar162/glowing-card/default/video.1755200622157.mp4",
+            "author": "ravikatiyar162",
+            "authorImage": "https://vucvdpamtrjkzmubwlts.supabase.co/storage/v1/object/public/users/user_2zMtrqo9RMaaIn4f8F2z3oeY497/avatar.png",
+            "installCommand": "npx shadcn@latest add \"https://21st.dev/r/ravikatiyar162/glowing-card?api_key=$API_KEY_21ST\"",
+            "url": "https://21st.dev/@ravikatiyar162/components/glowing-card",
+            "source": "catalog",
+            "confidence": 0.5,
+            "rationale": [
+              "Matches dashboard, dark"
+            ]
+          },
+          {
+            "type": "component",
+            "id": 23782,
+            "name": "AI Context Meter",
+            "description": "Context window meter whose ring fills and shifts hue at the warning threshold, never changing size. Hover for a token breakdown. Respects prefers-reduced-motion.",
+            "previewUrl": "https://cdn.21st.dev/user_2s2o9RwN7OoP4Na42lJREy96Xua/ai-context-meter/default/preview.1785743364328.png",
+            "videoUrl": null,
+            "author": "educalvolpz",
+            "authorImage": "https://vucvdpamtrjkzmubwlts.supabase.co/storage/v1/object/public/users/user_2s2o9RwN7OoP4Na42lJREy96Xua/avatar.jpeg",
+            "installCommand": "npx shadcn@latest add \"https://21st.dev/r/educalvolpz/ai-context-meter?api_key=$API_KEY_21ST\"",
+            "url": "https://21st.dev/@educalvolpz/components/ai-context-meter",
+            "source": "catalog",
+            "confidence": 0.49,
+            "rationale": [
+              "Semantically relevant in the 21st catalog"
+            ]
+          },
+          {
+            "type": "component",
+            "id": 4567,
+            "name": "Liquid  Weather glass",
+            "description": "Liquid glass components inspired by apple and figma",
+            "previewUrl": "https://cdn.21st.dev/user_2zAsvSHo1IeJGKtSjJ3uR1N1Cd7/liquid-weather-glass/default/preview.1787004007499.png",
+            "videoUrl": "https://cdn.21st.dev/user_2zAsvSHo1IeJGKtSjJ3uR1N1Cd7/liquid-weather-glass/default/video.1787004021934.mp4",
+            "author": "uilayout.contact",
+            "authorImage": "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18yekFzdlBhQVN2bFB2ZVp5UmZ3dWhlaHFtZmoifQ",
+            "installCommand": "npx shadcn@latest add \"https://21st.dev/r/uilayout.contact/liquid-weather-glass?api_key=$API_KEY_21ST\"",
+            "url": "https://21st.dev/@uilayout.contact/components/liquid-weather-glass",
+            "source": "catalog",
+            "confidence": 0.48,
+            "rationale": [
+              "Semantically relevant in the 21st catalog"
+            ]
+          },
+          {
+            "type": "component",
+            "id": 18064,
+            "name": "Cloudscape",
+            "description": "A WebGL-powered animated cloud gradient that renders a soft, flowing sky-like background using layered noise and color blending.",
+            "previewUrl": "https://cdn.21st.dev/amanshakya307/cloudscape/default/preview.1785314796960-ddb6d3a3-ee89-41d3-8cc5-7c3ecca9f41b.png",
+            "videoUrl": "https://cdn.21st.dev/amanshakya307/cloudscape/default/video.1785314796960-ddb6d3a3-ee89-41d3-8cc5-7c3ecca9f41b.mp4",
+            "author": "amanshakya307",
+            "authorImage": "https://vucvdpamtrjkzmubwlts.supabase.co/storage/v1/object/public/users/user_2zS6eT7CKCzSn95hAnyPfzabO7I/avatar.png",
+            "installCommand": "npx shadcn@latest add \"https://21st.dev/r/amanshakya307/cloudscape?api_key=$API_KEY_21ST\"",
+            "url": "https://21st.dev/@amanshakya307/components/cloudscape",
+            "source": "catalog",
+            "confidence": 0.48,
+            "rationale": [
+              "Semantically relevant in the 21st catalog"
+            ]
+          },
+          {
+            "type": "component",
+            "id": 11605,
+            "name": "Globe Analytics",
+            "description": "A WebGL globe with real-time visitor analytics badges. Numbers update live with trend arrows showing growth.",
+            "previewUrl": "https://cdn.21st.dev/reapollo/cobe-globe-analytics/default/preview.1774294444412.png",
+            "videoUrl": "https://cdn.21st.dev/reapollo/cobe-globe-analytics/default/video.1774294444412.mp4",
+            "author": "shuding",
+            "authorImage": "https://avatars.githubusercontent.com/u/3676859?v=4",
+            "installCommand": "npx shadcn@latest add \"https://21st.dev/r/shuding/cobe-globe-analytics?api_key=$API_KEY_21ST\"",
+            "url": "https://21st.dev/@shuding/components/cobe-globe-analytics",
+            "source": "catalog",
+            "confidence": 0.47,
+            "rationale": [
+              "Semantically relevant in the 21st catalog"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

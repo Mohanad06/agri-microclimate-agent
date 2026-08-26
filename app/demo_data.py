@@ -41,6 +41,11 @@ def get_demo_fortyguard_result() -> ToolResult:
         data={
             "heatmap": {
                 "stats_data": {
+                    "temperature_stats": {
+                        "maximum": 34.5,
+                        "minimum": 29.8,
+                        "mean": 32.1
+                    },
                     "max": 34.5,
                     "mean": 32.1,
                     "min": 29.8,
