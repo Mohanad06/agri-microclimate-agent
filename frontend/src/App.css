@@ -676,3 +676,21 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Leaflet Map Tile Fixes */
+.leaflet-container {
+  height: 280px !important;
+  width: 100% !important;
+  border-radius: 0 0 12px 12px;
+  background: #0f172a !important;
+  z-index: 1;
+}
+
+.map-embed-card {
+  margin-top: 0.85rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
