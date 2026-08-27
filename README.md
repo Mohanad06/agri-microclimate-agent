@@ -30,13 +30,16 @@
 
 ---
 
-## 🎨 Commercial Web Dashboard (Phase 5 Visual Identity)
+## 🎨 Commercial Web Dashboard (Phase 5 Visual Identity & Custom Artwork)
 
 The frontend features a commercial-grade agricultural SaaS user interface reverse-engineered from premium AgriTech design principles:
 
-- **Fresh Agricultural Design Tokens**: Primary Leaf Green (`#2E9F45`), Deep Forest Green (`#176B35`), Fresh Green (`#4CAF50`), and Light Organic Backdrop (`#F8FAF7`).
+- **Organic Green Brushstroke Artwork**: Custom vertical green paint brush background artwork (`RealWhiteBrushBackground.jsx`) creating a distinct, high-end organic brand aesthetic.
+- **Glassmorphic Navigation Bar**: High-contrast dark emerald glass topbar (`rgba(8, 28, 22, 0.86)`) with `backdrop-filter: blur(20px)`, emerald glow borders, and crystal-clear white active tab styling (`#FFFFFF`).
+- **High-Resolution Crop Photography**: Real agricultural field photography for **Tomato**, **Almond**, **Corn**, **Grape**, and **Cotton** knowledge base cards.
+- **Fresh Agricultural Design Tokens**: Primary Emerald Green (`#10B981`), Deep Forest Green (`#047857`), Fresh Mint (`#34D399`), and Deep Organic Background (`#0E3529`).
 - **Typography Pairings**: Google Font `Inter` for primary UI hierarchy and `JetBrains Mono` for tabular numerical metrics, coordinates, and units.
-- **Card Depth & Motion Language**: Elevated pure white cards with soft ambient green shadows, hover lift (`translateY(-4px)`), and image zoom transitions (`scale(1.07)`).
+- **Card Depth & Motion Language**: Elevated glass cards with soft ambient green shadows, hover lift (`translateY(-4px)`), and 3D card flip transitions.
 - **BrandIntro Splash Screen**: Translucent backdrop blur (`backdrop-filter: blur(20px)`), blur-to-sharp logo reveal, and `sessionStorage` single-play memory (`agri_intro_played`) so the splash executes once per browser session.
 - **21st.dev Metric Cards**: Integrated `MetricCard21st` components for environmental observation displays.
 - **Interactive Leaflet Map Pin Selector**: Drag-and-drop map pin selector allowing growers to click directly on field locations.

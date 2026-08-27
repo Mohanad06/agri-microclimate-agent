@@ -78,13 +78,14 @@ Hackathon Demo Presentation
 ### Phase 5 — Commercial UI/UX Redesign & Visual Identity System
 
 - **Reverse-Engineered Agrihub Visual Language**: Extracted visual principles from commercial AgriTech reference designs and translated them into an original SaaS identity.
+- **Custom Organic Brushstroke Artwork**: Integrated full-viewport high-resolution vertical green paint brush artwork (`RealWhiteBrushBackground.jsx` + `brush_bottom_green.jpg`).
+- **Glassmorphism Topbar & High-Contrast Navigation**: Redesigned sticky topbar with dark emerald glass (`rgba(8, 28, 22, 0.86)`), `backdrop-filter: blur(20px)`, emerald glow borders, and crystal-clear `#FFFFFF` active tab contrast.
+- **High-Res Crop Photography**: Integrated high-quality agricultural imagery for Tomato, Almond, Corn, Grape, and Cotton crop cards (`almond.png`, `grape.png`, `cotton.png`).
 - **Agricultural Color Palette & Design Tokens**:
-  - Primary Leaf Green (`#2E9F45`), Deep Forest Green (`#176B35`), Fresh Green (`#4CAF50`)
-  - Light Organic Background (`#F8FAF7`), Pure White Elevated Cards (`#FFFFFF`)
-  - Deep Forest Charcoal Text (`#17301F`), Sage Slate Muted Text (`#617064`)
+  - Primary Emerald Green (`#10B981`), Deep Forest Green (`#047857`), Fresh Mint (`#34D399`)
+  - Deep Organic Background (`#0E3529`), Elevated Glass Cards (`#14382D`)
 - **Typography Pairings**: `Inter` for primary UI/headings and `JetBrains Mono` for tabular metric displays, coordinates, and units.
-- **Pill Buttons & Card Depth**: Pill-shaped primary gradient buttons (`linear-gradient(135deg, #2E9F45 0%, #176B35 100%)`) and elevated cards with hover lift (`translateY(-4px)`) and image zoom (`scale(1.07)`).
-- **High-Res Crop Photography**: Integrated high-quality agricultural imagery for Tomato, Almond, Corn, Grape, and Cotton knowledge base cards.
+- **Pill Buttons & Card Depth**: Pill-shaped primary gradient buttons (`linear-gradient(135deg, #10B981 0%, #047857 100%)`) and 3D card flip animation (`rotateY(180deg)`).
 - **BrandIntro Splash Screen**: Translucent backdrop blur (`backdrop-filter: blur(20px)`), blur-to-sharp logo reveal, and `sessionStorage` single-play memory (`agri_intro_played`).
 - **21st.dev Metric Cards**: Integrated `MetricCard21st.jsx` for environmental observation displays.
 - **4-Step Decision Console & 4-Tab Results Dashboard**: Restyled `/analyze` form with step badges (`STEP 01`-`04`) and `/results` page with tabs bar (`OVERVIEW`, `EVIDENCE`, `ACTIONS`, `AGENT TRACE`).
