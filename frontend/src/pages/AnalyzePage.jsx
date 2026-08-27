@@ -28,29 +28,29 @@ export function AnalyzePage({
 
   return (
     <div className="analyze-page" style={{ maxWidth: '840px', margin: '0 auto' }}>
-      <div className="card" style={{ background: '#FFFFFF', padding: '2rem' }}>
-        <div className="section-header" style={{ borderBottom: '1px solid #E2E8E2', paddingBottom: '1.25rem', marginBottom: '2rem' }}>
+      <div className="card" style={{ padding: '2rem' }}>
+        <div className="section-header" style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '1.25rem', marginBottom: '2rem' }}>
           <div>
-            <h2 className="hero-title" style={{ fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: '0.65rem', color: '#17301F' }}>
-              <Cpu size={26} color="#2E9F45" />
+            <h2 className="hero-title" style={{ fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: '0.65rem', color: 'var(--text-primary)' }}>
+              <Cpu size={26} color="var(--primary-green)" />
               New Agricultural Microclimate Risk Analysis
             </h2>
-            <p style={{ color: '#617064', fontSize: '0.9rem', margin: '0.35rem 0 0 0' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '0.35rem 0 0 0' }}>
               Step-by-step decision console. The AI Agent will automatically sequence FortyGuard, NASA POWER, and RAG tools.
             </p>
           </div>
-          <span className="badge">Agent Decision Console</span>
+          {/* <span className="badge">Agent Decision Console</span> */}
         </div>
 
         {error && <ErrorAlert error={error} />}
 
         <form onSubmit={handleSubmit}>
           {/* STEP 01 — FIELD LOCATION & MAP */}
-          <div style={{ marginBottom: '2rem', padding: '1.5rem', background: '#F4FAF4', borderRadius: '16px', border: '1px solid #E2E8E2' }}>
+          <div style={{ marginBottom: '2rem', padding: '1.5rem', background: 'var(--very-light-green)', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.25rem' }}>
-              <span className="badge" style={{ background: '#2E9F45', color: '#FFFFFF', fontWeight: 800 }}>STEP 01</span>
-              <h4 style={{ fontSize: '0.975rem', fontWeight: 800, color: '#17301F', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                <MapPin size={18} color="#2E9F45" />
+              <span className="badge" style={{ background: 'var(--primary-green)', color: '#FFFFFF', fontWeight: 800 }}>STEP 01</span>
+              <h4 style={{ fontSize: '0.975rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                <MapPin size={18} color="var(--primary-green)" />
                 FIELD LOCATION & COORDINATES
               </h4>
             </div>
@@ -84,11 +84,11 @@ export function AnalyzePage({
           </div>
 
           {/* STEP 02 — CROP & GROWTH STAGE */}
-          <div style={{ marginBottom: '2rem', padding: '1.5rem', background: '#F4FAF4', borderRadius: '16px', border: '1px solid #E2E8E2' }}>
+          <div style={{ marginBottom: '2rem', padding: '1.5rem', background: 'var(--very-light-green)', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.25rem' }}>
-              <span className="badge" style={{ background: '#176B35', color: '#FFFFFF', fontWeight: 800 }}>STEP 02</span>
-              <h4 style={{ fontSize: '0.975rem', fontWeight: 800, color: '#17301F', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                <Layers size={18} color="#176B35" />
+              <span className="badge" style={{ background: 'var(--primary-green)', color: '#FFFFFF', fontWeight: 800 }}>STEP 02</span>
+              <h4 style={{ fontSize: '0.975rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                <Layers size={18} color="var(--primary-green)" />
                 CROP & GROWTH STAGE
               </h4>
             </div>
@@ -124,10 +124,10 @@ export function AnalyzePage({
           </div>
 
           {/* STEP 03 — AGRICULTURAL GOAL / QUESTION */}
-          <div style={{ marginBottom: '2rem', padding: '1.5rem', background: '#F4FAF4', borderRadius: '16px', border: '1px solid #E2E8E2' }}>
+          <div style={{ marginBottom: '2rem', padding: '1.5rem', background: 'var(--very-light-green)', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.25rem' }}>
               <span className="badge" style={{ background: '#D97706', color: '#FFFFFF', fontWeight: 800 }}>STEP 03</span>
-              <h4 style={{ fontSize: '0.975rem', fontWeight: 800, color: '#17301F', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <h4 style={{ fontSize: '0.975rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                 <BookOpen size={18} color="#D97706" />
                 AGRICULTURAL GOAL / QUESTION
               </h4>
@@ -146,23 +146,16 @@ export function AnalyzePage({
           </div>
 
           {/* STEP 04 — EXECUTE ANALYSIS */}
-          <div style={{ padding: '1.6rem', background: 'linear-gradient(135deg, #EAF7EC 0%, #F4FAF4 100%)', borderRadius: '16px', border: '1px solid rgba(46, 159, 69, 0.35)' }}>
-            <button className="primary-button" type="submit" disabled={loading} style={{ fontSize: '1.05rem', padding: '1.15rem', width: '100%' }}>
-              {loading ? (
-                <LoadingSpinner size={20} label="Agent Orchestrator Executing Tools..." />
-              ) : (
-                <>
-                  Analyze Microclimate Risk
-                  <ArrowRight size={20} />
-                </>
-              )}
-            </button>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', justifyContent: 'center', marginTop: '0.95rem', fontSize: '0.825rem', color: '#617064' }}>
-              <ShieldCheck size={16} color="#2E9F45" />
-              <span>The agent will automatically sequence Geocoding, RAG, FortyGuard, and NASA POWER tools.</span>
-            </div>
-          </div>
+          <button className="primary-button" type="submit" disabled={loading} style={{ fontSize: '1.05rem', padding: '1.15rem', width: '100%', marginTop: '1rem' }}>
+            {loading ? (
+              <LoadingSpinner size={20} label="Agent Orchestrator Executing Tools..." />
+            ) : (
+              <>
+                Analyze Microclimate Risk
+                <ArrowRight size={20} />
+              </>
+            )}
+          </button>
         </form>
       </div>
     </div>

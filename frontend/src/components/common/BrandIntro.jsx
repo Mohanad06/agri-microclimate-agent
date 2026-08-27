@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Sprout, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
+import { AgriLogo } from './AgriLogo.jsx';
 
 /**
  * BrandIntro Component
@@ -125,18 +126,12 @@ export function BrandIntro({ onComplete, forceReplay = false }) {
       >
         <div
           style={{
-            width: '84px',
-            height: '84px',
-            borderRadius: '26px',
-            background: 'linear-gradient(135deg, #2E9F45 0%, #176B35 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 16px 36px rgba(46, 159, 69, 0.35)',
-            border: '2px solid rgba(255, 255, 255, 0.4)',
           }}
         >
-          <Sprout size={48} color="#FFFFFF" />
+          <AgriLogo size={90} />
         </div>
 
         <div>

@@ -1,27 +1,27 @@
 import React from 'react';
-import { Sprout } from 'lucide-react';
+import { AgriLogo } from './AgriLogo.jsx';
 import StatusPill from './StatusPill.jsx';
 
 /**
  * Topbar Header component.
- * Features sticky backdrop blur, brand mark, live status pill, and direct navigation links.
+ * Features sticky backdrop blur, new custom brand logo mark, live status pill, and direct navigation links.
  */
 export function Header({ apiStatus = 'connected', currentPath = '/', onNavigate }) {
   return (
     <header className="topbar">
       <div className="topbar-content">
         <div className="brand-container" onClick={() => onNavigate && onNavigate('/')} style={{ cursor: 'pointer' }}>
-          <div className="brand-logo-icon">
-            <Sprout size={22} color="#FFFFFF" />
+          <div className="brand-logo-icon-clean">
+            <AgriLogo size={42} />
           </div>
           <div className="brand-text">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-              <h1>Agri Microclimate Agent</h1>
-              <span className="badge">
+              <h1>Climato</h1>
+              {/* <span className="badge">
                 FortyGuard '26
-              </span>
+              </span> */}
             </div>
-            <span className="brand-subtitle">AI Hyperlocal Agricultural Decision Engine</span>
+            {/* <span className="brand-subtitle">AI Hyperlocal Agricultural Decision Engine</span> */}
           </div>
         </div>
 

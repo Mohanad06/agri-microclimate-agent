@@ -41,9 +41,9 @@ export function AuditTraceModal({ open, onClose, trace }) {
         left: 0,
         right: 0,
         bottom: 0,
-        background: 'rgba(23, 48, 31, 0.45)',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
+        background: 'rgba(0, 0, 0, 0.65)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         zIndex: 9990,
         display: 'flex',
         alignItems: 'center',
@@ -55,26 +55,27 @@ export function AuditTraceModal({ open, onClose, trace }) {
         className="modal-content-card"
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: '#FFFFFF',
+          background: 'rgba(15, 32, 21, 0.95)',
           borderRadius: '18px',
           width: '100%',
           maxWidth: '780px',
           maxHeight: '85vh',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '0 20px 50px rgba(23, 107, 53, 0.2)',
-          border: '1px solid #E2E8E2',
-          overflow: 'hidden'
+          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.5)',
+          border: '1px solid var(--border-color)',
+          overflow: 'hidden',
+          color: 'var(--text-primary)'
         }}
       >
-        <div className="modal-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 1.5rem', borderBottom: '1px solid #E2E8E2', background: '#F4FAF4' }}>
-          <div className="modal-title" id="audit-modal-title" style={{ fontSize: '1.1rem', fontWeight: 800, color: '#17301F', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <FileText size={20} color="#2E9F45" />
+        <div className="modal-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-color)', background: 'rgba(10, 24, 15, 0.9)' }}>
+          <div className="modal-title" id="audit-modal-title" style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <FileText size={20} color="var(--primary-green)" />
             Agent Audit Trace Log
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
             <button type="button" className="secondary-button" onClick={handleCopy} style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem' }}>
-              {copied ? <Check size={14} color="#2E9F45" /> : <Copy size={14} />}
+              {copied ? <Check size={14} color="var(--primary-green)" /> : <Copy size={14} />}
               {copied ? 'Copied' : 'Copy Trace'}
             </button>
             <button
@@ -84,7 +85,7 @@ export function AuditTraceModal({ open, onClose, trace }) {
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#617064',
+                color: 'var(--text-muted)',
                 cursor: 'pointer',
                 padding: '0.35rem',
                 borderRadius: '50%',
@@ -104,11 +105,11 @@ export function AuditTraceModal({ open, onClose, trace }) {
             style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: '0.825rem',
-              color: '#17301F',
-              background: '#F8FAF7',
+              color: 'var(--text-secondary)',
+              background: 'rgba(10, 24, 15, 0.85)',
               padding: '1.25rem',
               borderRadius: '12px',
-              border: '1px solid #E2E8E2',
+              border: '1px solid var(--border-color)',
               whiteSpace: 'pre-wrap',
               wordBreak: 'break-word',
               margin: 0

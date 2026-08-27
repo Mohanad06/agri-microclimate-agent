@@ -6,14 +6,14 @@
       "content": [
         {
           "type": "text",
-          "text": "You've reached the free 21st component-code limit (2/day), resets 2026-08-27T00:00:00.000Z. Component code on 21st is paid; tell the user and share the upgrade link: https://21st.dev/pricing"
+          "text": "You've reached the free 21st component-code limit (2/day), resets 2026-08-28T00:00:00.000Z. Component code on 21st is paid; tell the user and share the upgrade link: https://21st.dev/pricing"
         }
       ],
       "structuredContent": {
         "locked": true,
         "reason": "retrieval_limit_reached",
         "limit": 2,
-        "resetAt": "2026-08-27T00:00:00.000Z",
+        "resetAt": "2026-08-28T00:00:00.000Z",
         "upgradeUrl": "https://21st.dev/pricing"
       }
     }

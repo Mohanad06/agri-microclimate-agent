@@ -6,26 +6,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* Fresh Agricultural Color Palette */
-  --primary-green: #2E9F45;
-  --primary-green-hover: #238036;
-  --deep-green: #176B35;
-  --fresh-green: #4CAF50;
-  --light-green: #EAF7EC;
-  --very-light-green: #F4FAF4;
-  --bg-main: #F8FAF7;
-  --surface-white: #FFFFFF;
+  /* Fresh Agricultural Color Palette — Agro Teal-Emerald Leaf Aesthetic */
+  --primary-green: #00E676;
+  --primary-green-hover: #00C853;
+  --deep-green: #00796B;
+  --fresh-green: #10B981;
+  --light-green: rgba(0, 230, 118, 0.18);
+  --very-light-green: rgba(0, 230, 118, 0.08);
+  --bg-main: #022C22;
+  --surface-white: rgba(2, 44, 34, 0.78);
 
   /* Typography Colors */
-  --text-primary: #17301F;
-  --text-secondary: #3D4F41;
-  --text-muted: #617064;
-  --text-on-primary: #FFFFFF;
+  --text-primary: #F0FDF4;
+  --text-secondary: #D1FAE5;
+  --text-muted: #A7F3D0;
+  --text-on-primary: #022C22;
 
   /* Borders & Dividers */
-  --border-color: #E2E8E2;
-  --border-hover: rgba(46, 159, 69, 0.35);
-  --border-subtle: #EEF4EF;
+  --border-color: rgba(0, 230, 118, 0.28);
+  --border-hover: rgba(0, 230, 118, 0.55);
+  --border-subtle: rgba(0, 230, 118, 0.15);
 
   /* Status & Risk States */
   --risk-safe: #176B35;

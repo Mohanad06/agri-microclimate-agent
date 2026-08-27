@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import useAgent from './hooks/useAgent.js';
 import Header from './components/common/Header.jsx';
 import BrandIntro from './components/common/BrandIntro.jsx';
+import AgroLeafBackground from './components/common/AgroLeafBackground.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import AnalyzePage from './pages/AnalyzePage.jsx';
 import ResultsPage from './pages/ResultsPage.jsx';
@@ -10,7 +11,7 @@ import './App.css';
 
 /**
  * Main Agri Microclimate Agent Application Component.
- * Integrates BrandIntro splash reveal and Light-First AgriTech visual identity.
+ * Agro Leaf Organic Aesthetic - Teal-Emerald Canvas with Overlapping Organic Leaves & Bio-Geometry.
  */
 function App() {
   const {
@@ -74,6 +75,9 @@ function App() {
 
   return (
     <div className="app-shell">
+      {/* Agro Leaf Aesthetic — Organic Leaf & Contour Background */}
+      <AgroLeafBackground />
+
       {/* Animated Brand Splash Intro with progress bar */}
       <BrandIntro key={introKey} />
 

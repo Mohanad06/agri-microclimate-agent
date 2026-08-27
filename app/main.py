@@ -34,7 +34,6 @@ except Exception as _e:
     print(f"Ingestion warning: {_e}")
 
 
-
 app = FastAPI(
     title="Agri Microclimate Agent API",
     description=(
