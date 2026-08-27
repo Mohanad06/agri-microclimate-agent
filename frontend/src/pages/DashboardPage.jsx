@@ -56,7 +56,7 @@ export function DashboardPage({ onNavigate }) {
       symptom: 'Leaf Scorching & Kernel Deficit',
       strategy: 'Regulated Deficit Irrigation (RDI)',
       source: 'UC Davis Water Management',
-      image: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80'
+      image: '/almond.png'
     },
     {
       name: 'Corn',
@@ -74,7 +74,7 @@ export function DashboardPage({ onNavigate }) {
       symptom: 'Berry Sunburn & Acidity Degradation',
       strategy: 'Canopy leaf management & kaolin clay cover',
       source: 'UC Davis Viticulture Extension',
-      image: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=600&q=80'
+      image: '/grape.png'
     },
     {
       name: 'Cotton',
@@ -83,7 +83,7 @@ export function DashboardPage({ onNavigate }) {
       symptom: 'Square Abscission & Reduced Fiber Quality',
       strategy: 'Targeted night irrigation & Pix regulator',
       source: 'Texas A&M AgriLife Extension',
-      image: 'https://images.unsplash.com/photo-1594897030264-ab7d87efc473?auto=format&fit=crop&w=600&q=80'
+      image: '/cotton.png'
     }
   ];
 

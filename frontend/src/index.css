@@ -6,49 +6,50 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* Fresh Agricultural Color Palette — Agro Teal-Emerald Leaf Aesthetic */
-  --primary-green: #00E676;
-  --primary-green-hover: #00C853;
-  --deep-green: #00796B;
-  --fresh-green: #10B981;
-  --light-green: rgba(0, 230, 118, 0.18);
-  --very-light-green: rgba(0, 230, 118, 0.08);
-  --bg-main: #022C22;
-  --surface-white: rgba(2, 44, 34, 0.78);
+  /* Premium Agricultural SaaS Palette — Balanced Slate-Charcoal & Emerald Accent */
+  --primary-green: #10B981;
+  --primary-green-hover: #059669;
+  --deep-green: #047857;
+  --fresh-green: #34D399;
+  --light-green: rgba(16, 185, 129, 0.16);
+  --very-light-green: rgba(16, 185, 129, 0.08);
+  --bg-main: #0E3529;
+  --surface-white: rgba(16, 48, 38, 0.85);
+  --surface-card: linear-gradient(135deg, rgba(20, 56, 45, 0.88) 0%, rgba(10, 32, 25, 0.92) 100%);
 
-  /* Typography Colors */
-  --text-primary: #F0FDF4;
-  --text-secondary: #D1FAE5;
-  --text-muted: #A7F3D0;
-  --text-on-primary: #022C22;
+  /* Typography Colors — High Contrast Slate Hierarchy */
+  --text-primary: #FFFFFF;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+  --text-on-primary: #041A14;
 
   /* Borders & Dividers */
-  --border-color: rgba(0, 230, 118, 0.28);
-  --border-hover: rgba(0, 230, 118, 0.55);
-  --border-subtle: rgba(0, 230, 118, 0.15);
+  --border-color: rgba(255, 255, 255, 0.12);
+  --border-hover: rgba(52, 211, 153, 0.45);
+  --border-subtle: rgba(255, 255, 255, 0.08);
 
   /* Status & Risk States */
-  --risk-safe: #176B35;
-  --risk-safe-bg: #EAF7EC;
-  --risk-safe-border: rgba(46, 159, 69, 0.3);
+  --risk-safe: #10B981;
+  --risk-safe-bg: rgba(16, 185, 129, 0.12);
+  --risk-safe-border: rgba(16, 185, 129, 0.35);
 
-  --risk-warning: #D97706;
-  --risk-warning-bg: #FEFCE8;
-  --risk-warning-border: #FCD34D;
+  --risk-warning: #F59E0B;
+  --risk-warning-bg: rgba(245, 158, 11, 0.12);
+  --risk-warning-border: rgba(245, 158, 11, 0.35);
 
-  --risk-high: #E5484D;
-  --risk-high-bg: #FDF2F2;
-  --risk-high-border: #FCA5A5;
+  --risk-high: #EF4444;
+  --risk-high-bg: rgba(239, 68, 68, 0.12);
+  --risk-high-border: rgba(239, 68, 68, 0.35);
 
   --risk-insufficient: #64748B;
-  --risk-insufficient-bg: #F1F5F9;
-  --risk-insufficient-border: #CBD5E1;
+  --risk-insufficient-bg: rgba(100, 116, 139, 0.12);
+  --risk-insufficient-border: rgba(100, 116, 139, 0.3);
 
   /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(23, 107, 53, 0.04);
-  --shadow-md: 0 8px 24px rgba(23, 107, 53, 0.07);
-  --shadow-lg: 0 16px 40px rgba(23, 107, 53, 0.12);
-  --shadow-primary: 0 8px 20px rgba(46, 159, 69, 0.28);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.4);
+  --shadow-primary: 0 8px 20px rgba(16, 185, 129, 0.25);
 
   /* Radii */
   --radius-sm: 8px;
@@ -89,10 +90,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: radial-gradient(circle at 50% 0%, rgba(46, 159, 69, 0.05) 0%, transparent 60%),
-              radial-gradient(circle at 100% 40%, rgba(23, 107, 53, 0.03) 0%, transparent 50%),
-              var(--bg-main);
-  background-attachment: fixed;
+  background-color: var(--bg-main);
   overflow-x: hidden;
 }
 

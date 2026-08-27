@@ -45,6 +45,48 @@ The frontend features a commercial-grade agricultural SaaS user interface revers
 
 ---
 
+## 🔒 FortyGuard Data Compliance & API Governance
+
+This project adheres strictly to **FortyGuard Intellectual Property & Data Licensing Guidelines**:
+
+1. **Live On-Demand API Integration**:
+   The application communicates with the FortyGuard tOS Enterprise API (`https://api.fortyguard.com`) dynamically at runtime. All thermal surface heatmaps, statistics, and parcel metrics are fetched live upon user query execution.
+
+2. **Zero Raw Dataset Redistribution**:
+   In compliance with FortyGuard IP rules, **no raw downloaded FortyGuard heatmap tiles, raster datasets, or proprietary spatial files are committed or redistributed in this repository**. All raw spatial data is kept out of version control via `.gitignore`.
+
+3. **Secure API Key Management**:
+   API keys (`FORTYGUARD_API_KEY`) are managed strictly server-side via environment variables (`.env`) and are never exposed in repository commits or client-side JavaScript assets.
+
+4. **Example FortyGuard API Data Contract**:
+   Below is a sample request payload and redacted response shape illustrating the client integration:
+
+```json
+// POST /v1/thermal/analysis
+// Header: api-key: fg_live_xxxxxxxxxxxxxxxx
+{
+  "latitude": 37.3352,
+  "longitude": -121.8811,
+  "radius_km": 1.5,
+  "metrics": ["mean_temp", "peak_exceedance", "persistence_index"]
+}
+
+// Response (Redacted/Sample Payload for Documentation)
+{
+  "status": "completed",
+  "activity_id": "act_sample_789412",
+  "result": {
+    "parcel_id": "diridon_zone_01",
+    "mean_surface_temp_c": 38.4,
+    "peak_heat_duration_hours": 6.5,
+    "thermal_persistence_score": 0.82,
+    "spatial_resolution_m": 60
+  }
+}
+```
+
+---
+
 ## 🚀 Quickstart & Setup Guide
 
 ### Prerequisites
