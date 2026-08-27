@@ -69,9 +69,13 @@ if os.path.exists(dist_dir):
     if os.path.exists(assets_dir):
         app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
 
+    @app.get("/")
+    async def serve_root():
+        return FileResponse(os.path.join(dist_dir, "index.html"))
+
     @app.get("/{full_path:path}")
     async def serve_spa(full_path: str):
-        if full_path in ["health", "crops", "analyze", "docs", "openapi.json", "redoc"]:
+        if full_path in ["health", "crops", "docs", "openapi.json", "redoc"]:
             return None
         file_path = os.path.join(dist_dir, full_path)
         if os.path.exists(file_path) and os.path.isfile(file_path):
