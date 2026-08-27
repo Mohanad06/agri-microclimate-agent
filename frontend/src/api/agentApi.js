@@ -8,9 +8,11 @@ import axios from 'axios';
 
 // ── 1. Base URL Resolution & Safety Check ────────────────────────────────────
 
+const envUrl = import.meta.env.VITE_API_BASE_URL;
 const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  (typeof window !== 'undefined' ? window.location.origin : 'http://127.0.0.1:8000');
+  (envUrl && envUrl.trim() !== '' && !envUrl.includes('127.0.0.1') && !envUrl.includes('localhost'))
+    ? envUrl
+    : (typeof window !== 'undefined' ? window.location.origin : '');
 
 // ── 2. Axios Instance Configuration ──────────────────────────────────────────
 
