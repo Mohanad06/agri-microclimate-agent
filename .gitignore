@@ -256,4 +256,5 @@ data/env_params/*
 # Generated RAG index remains ignored
 data/knowledge_store.json
 frontend/node_modules/
+!frontend/dist/
 scratch/
