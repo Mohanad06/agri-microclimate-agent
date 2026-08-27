@@ -86,14 +86,14 @@ function formatMetricDisplay(item) {
 export function FindingsGrid({ findings = [] }) {
   if (!findings || findings.length === 0) {
     return (
-      <div className="card glass-card">
+      <div className="card" style={{ background: '#FFFFFF' }}>
         <div className="section-header">
           <h3 className="section-title">
-            <Thermometer size={18} color="#0ea5e9" />
+            <Thermometer size={20} color="#2E9F45" />
             Environmental Observations
           </h3>
         </div>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontStyle: 'italic' }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', fontStyle: 'italic' }}>
           No environmental observations available for this query.
         </p>
       </div>
@@ -101,14 +101,14 @@ export function FindingsGrid({ findings = [] }) {
   }
 
   return (
-    <div className="card glass-card">
+    <div className="card" style={{ background: '#FFFFFF' }}>
       <div className="section-header">
         <h3 className="section-title">
-          <Thermometer size={18} color="#0ea5e9" />
+          <Thermometer size={20} color="#2E9F45" />
           Environmental Observations
         </h3>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span className="badge" style={{ background: 'rgba(14, 165, 233, 0.15)', color: '#38bdf8', border: '1px solid rgba(14, 165, 233, 0.3)' }}>
+          <span className="badge">
             21st.dev UI #24337
           </span>
           <span className="status-pill online">{findings.length} Metrics</span>
@@ -139,3 +139,4 @@ export function FindingsGrid({ findings = [] }) {
 }
 
 export default FindingsGrid;
+

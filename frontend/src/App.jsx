@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import useAgent from './hooks/useAgent.js';
 import Header from './components/common/Header.jsx';
+import BrandIntro from './components/common/BrandIntro.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import AnalyzePage from './pages/AnalyzePage.jsx';
 import ResultsPage from './pages/ResultsPage.jsx';
@@ -8,7 +9,8 @@ import AgentIntelligencePage from './pages/AgentIntelligencePage.jsx';
 import './App.css';
 
 /**
- * Main Agri Microclimate Agent Application Component with Multi-Page Information Architecture.
+ * Main Agri Microclimate Agent Application Component.
+ * Integrates BrandIntro splash reveal and Light-First AgriTech visual identity.
  */
 function App() {
   const {
@@ -26,6 +28,7 @@ function App() {
 
   // Page Routing State ('/' | '/analyze' | '/results' | '/agent')
   const [currentPath, setCurrentPath] = useState('/');
+  const [introKey, setIntroKey] = useState(0);
 
   // Sync route with window.location.hash on mount and hashchange
   useEffect(() => {
@@ -53,6 +56,10 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
+  const handleReplayIntro = useCallback(() => {
+    setIntroKey((prev) => prev + 1);
+  }, []);
+
   // Wrap submitAnalysis to auto-navigate to /results upon successful backend response
   const handleFormSubmit = useCallback(
     async (e) => {
@@ -67,6 +74,9 @@ function App() {
 
   return (
     <div className="app-shell">
+      {/* Animated Brand Splash Intro with progress bar */}
+      <BrandIntro key={introKey} />
+
       {/* Top Header with live API connection status and navigation links */}
       <Header
         apiStatus={apiStatus}

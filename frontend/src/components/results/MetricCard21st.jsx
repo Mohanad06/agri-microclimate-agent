@@ -1,11 +1,11 @@
 import React from 'react';
-import { TrendingUp, TrendingDown, CheckCircle2, AlertTriangle, ShieldAlert } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, ShieldAlert } from 'lucide-react';
 
 /**
  * MetricCard21st Component
  *
  * Integrated from 21st.dev (Component ID: 24337 - Neomorphism Metric Card)
- * Designed for Agri Microclimate Agent environmental observation metrics.
+ * Restyled for Agri Microclimate Agent Light-First Premium AgriTech system.
  */
 export function MetricCard21st({
   title,
@@ -18,19 +18,24 @@ export function MetricCard21st({
 }) {
   const isViolated = status === 'violated';
   const isWarning = status === 'warning';
-  const isSafe = status === 'safe';
 
-  // Status color mappings
-  let statusColor = '#34d399'; // Emerald safe
+  // Status color & badge mappings
+  let statusColor = '#2E9F45'; // Primary green
+  let statusBg = '#EAF7EC';
+  let statusBorder = 'rgba(46, 159, 69, 0.3)';
   let StatusIcon = CheckCircle2;
   let statusLabel = 'Optimal';
 
   if (isViolated) {
-    statusColor = '#fca5a5'; // Red alert
+    statusColor = '#E5484D';
+    statusBg = '#FDF2F2';
+    statusBorder = '#FCA5A5';
     StatusIcon = ShieldAlert;
     statusLabel = 'Threshold Exceeded';
   } else if (isWarning) {
-    statusColor = '#fcd34d'; // Amber warning
+    statusColor = '#D97706';
+    statusBg = '#FEFCE8';
+    statusBorder = '#FCD34D';
     StatusIcon = AlertTriangle;
     statusLabel = 'Low Observation';
   }
@@ -39,20 +44,20 @@ export function MetricCard21st({
     <div
       className="metric-card-21st"
       style={{
-        background: 'rgba(15, 23, 42, 0.85)',
-        border: `1px solid ${isViolated ? 'rgba(239, 68, 68, 0.4)' : isWarning ? 'rgba(245, 158, 11, 0.4)' : 'rgba(255, 255, 255, 0.09)'}`,
+        background: '#FFFFFF',
+        border: `1px solid ${isViolated ? '#FCA5A5' : isWarning ? '#FCD34D' : '#DDE9DF'}`,
         borderRadius: '16px',
         padding: '1.25rem',
         display: 'flex',
         flexDirection: 'column',
         justify: 'space-between',
-        boxShadow: isViolated ? '0 4px 20px rgba(239, 68, 68, 0.15)' : '0 4px 20px rgba(0, 0, 0, 0.3)',
-        transition: 'transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease'
+        boxShadow: isViolated ? '0 4px 18px rgba(229, 72, 77, 0.12)' : '0 4px 18px rgba(23, 107, 53, 0.05)',
+        transition: 'transform 200ms ease, box-shadow 200ms ease'
       }}
     >
       <div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
-          <span style={{ fontSize: '0.775rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <span style={{ fontSize: '0.775rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#617064', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
             {Icon && <Icon size={14} color={statusColor} />}
             {title}
           </span>
@@ -60,11 +65,11 @@ export function MetricCard21st({
             style={{
               fontSize: '0.675rem',
               fontWeight: 700,
-              padding: '0.15rem 0.45rem',
+              padding: '0.15rem 0.5rem',
               borderRadius: '9999px',
-              background: isViolated ? 'rgba(239, 68, 68, 0.15)' : isWarning ? 'rgba(245, 158, 11, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+              background: statusBg,
               color: statusColor,
-              border: `1px solid ${statusColor}40`,
+              border: `1px solid ${statusBorder}`,
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.25rem'
@@ -75,12 +80,12 @@ export function MetricCard21st({
           </span>
         </div>
 
-        <div style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.02em', color: isViolated ? '#fca5a5' : isWarning ? '#fcd34d' : '#f8fafc', fontFamily: "'JetBrains Mono', monospace" }}>
-          {value} <span style={{ fontSize: '1rem', fontWeight: 600, color: '#94a3b8' }}>{unit}</span>
+        <div style={{ fontSize: '1.8rem', fontWeight: 800, letterSpacing: '-0.02em', color: isViolated ? '#E5484D' : '#17301F', fontFamily: "'JetBrains Mono', monospace" }}>
+          {value} <span style={{ fontSize: '1rem', fontWeight: 600, color: '#617064' }}>{unit}</span>
         </div>
 
         {subtitle && (
-          <div style={{ fontSize: '0.775rem', color: '#64748b', marginTop: '0.35rem' }}>
+          <div style={{ fontSize: '0.775rem', color: '#8A9A8D', marginTop: '0.35rem', fontWeight: 500 }}>
             {subtitle}
           </div>
         )}
@@ -90,11 +95,11 @@ export function MetricCard21st({
         <div
           style={{
             marginTop: '0.85rem',
-            paddingTop: '0.6rem',
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+            paddingTop: '0.65rem',
+            borderTop: '1px solid #DDE9DF',
             fontSize: '0.8rem',
-            lineHeight: '1.4',
-            color: isViolated ? '#fca5a5' : isWarning ? '#fde047' : '#94a3b8',
+            lineHeight: '1.45',
+            color: isViolated ? '#991B1B' : isWarning ? '#92400E' : '#276738',
             fontStyle: 'italic'
           }}
         >

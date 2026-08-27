@@ -1,20 +1,13 @@
 import React, { useState } from 'react';
-import { Cpu, MapPin, Layers, Activity, BookOpen, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Cpu, MapPin, Layers, BookOpen, ArrowRight, ShieldCheck } from 'lucide-react';
 import CropSelect from '../components/form/CropSelect.jsx';
 import MapPinSelector from '../components/form/MapPinSelector.jsx';
 import ErrorAlert from '../components/common/ErrorAlert.jsx';
 import LoadingSpinner from '../components/common/LoadingSpinner.jsx';
 
 /**
- * AnalyzePage component for collecting user field location, crop, and goal.
- *
- * @param {Object} props
- * @param {Object} props.formData
- * @param {Function} props.onChange
- * @param {Function} props.onSubmit
- * @param {Array} props.crops
- * @param {boolean} props.loading
- * @param {Object|null} props.error
+ * AnalyzePage component for collecting field location, crop, and goal.
+ * Restyled for Light-First Commercial AgriTech Decision Console.
  */
 export function AnalyzePage({
   formData,
@@ -34,32 +27,30 @@ export function AnalyzePage({
   };
 
   return (
-    <div className="analyze-page" style={{ maxWidth: '800px', margin: '0 auto' }}>
-      <div className="card glass-card">
-        <div className="section-header" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
+    <div className="analyze-page" style={{ maxWidth: '840px', margin: '0 auto' }}>
+      <div className="card" style={{ background: '#FFFFFF', padding: '2rem' }}>
+        <div className="section-header" style={{ borderBottom: '1px solid #E2E8E2', paddingBottom: '1.25rem', marginBottom: '2rem' }}>
           <div>
-            <h2 className="hero-title" style={{ fontSize: '1.3rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <Cpu size={22} color="#0ea5e9" />
+            <h2 className="hero-title" style={{ fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: '0.65rem', color: '#17301F' }}>
+              <Cpu size={26} color="#2E9F45" />
               New Agricultural Microclimate Risk Analysis
             </h2>
-            <p style={{ color: '#94a3b8', fontSize: '0.875rem', margin: '0.25rem 0 0 0' }}>
-              Step-by-step decision console. The AI Agent will automatically select FortyGuard, NASA POWER, or RAG tools.
+            <p style={{ color: '#617064', fontSize: '0.9rem', margin: '0.35rem 0 0 0' }}>
+              Step-by-step decision console. The AI Agent will automatically sequence FortyGuard, NASA POWER, and RAG tools.
             </p>
           </div>
-          <span className="badge" style={{ background: 'rgba(14, 165, 233, 0.15)', color: '#38bdf8', borderColor: 'rgba(14, 165, 233, 0.3)' }}>
-            Agent Console
-          </span>
+          <span className="badge">Agent Decision Console</span>
         </div>
 
         {error && <ErrorAlert error={error} />}
 
         <form onSubmit={handleSubmit}>
           {/* STEP 01 — FIELD LOCATION & MAP */}
-          <div style={{ marginBottom: '1.75rem', padding: '1.25rem', background: '#090d16', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.07)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-              <span className="badge" style={{ background: '#0ea5e9', color: '#ffffff', fontWeight: 800 }}>STEP 01</span>
-              <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <MapPin size={16} color="#0ea5e9" />
+          <div style={{ marginBottom: '2rem', padding: '1.5rem', background: '#F4FAF4', borderRadius: '16px', border: '1px solid #E2E8E2' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.25rem' }}>
+              <span className="badge" style={{ background: '#2E9F45', color: '#FFFFFF', fontWeight: 800 }}>STEP 01</span>
+              <h4 style={{ fontSize: '0.975rem', fontWeight: 800, color: '#17301F', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                <MapPin size={18} color="#2E9F45" />
                 FIELD LOCATION & COORDINATES
               </h4>
             </div>
@@ -93,16 +84,16 @@ export function AnalyzePage({
           </div>
 
           {/* STEP 02 — CROP & GROWTH STAGE */}
-          <div style={{ marginBottom: '1.75rem', padding: '1.25rem', background: '#090d16', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.07)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-              <span className="badge" style={{ background: '#10b981', color: '#ffffff', fontWeight: 800 }}>STEP 02</span>
-              <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <Layers size={16} color="#10b981" />
+          <div style={{ marginBottom: '2rem', padding: '1.5rem', background: '#F4FAF4', borderRadius: '16px', border: '1px solid #E2E8E2' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.25rem' }}>
+              <span className="badge" style={{ background: '#176B35', color: '#FFFFFF', fontWeight: 800 }}>STEP 02</span>
+              <h4 style={{ fontSize: '0.975rem', fontWeight: 800, color: '#17301F', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                <Layers size={18} color="#176B35" />
                 CROP & GROWTH STAGE
               </h4>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
               <div className="form-group" style={{ marginBottom: 0 }}>
                 <label className="form-label">Target Crop</label>
                 <CropSelect
@@ -133,11 +124,11 @@ export function AnalyzePage({
           </div>
 
           {/* STEP 03 — AGRICULTURAL GOAL / QUESTION */}
-          <div style={{ marginBottom: '1.75rem', padding: '1.25rem', background: '#090d16', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.07)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-              <span className="badge" style={{ background: '#f59e0b', color: '#ffffff', fontWeight: 800 }}>STEP 03</span>
-              <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <BookOpen size={16} color="#f59e0b" />
+          <div style={{ marginBottom: '2rem', padding: '1.5rem', background: '#F4FAF4', borderRadius: '16px', border: '1px solid #E2E8E2' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.25rem' }}>
+              <span className="badge" style={{ background: '#D97706', color: '#FFFFFF', fontWeight: 800 }}>STEP 03</span>
+              <h4 style={{ fontSize: '0.975rem', fontWeight: 800, color: '#17301F', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                <BookOpen size={18} color="#D97706" />
                 AGRICULTURAL GOAL / QUESTION
               </h4>
             </div>
@@ -155,20 +146,20 @@ export function AnalyzePage({
           </div>
 
           {/* STEP 04 — EXECUTE ANALYSIS */}
-          <div style={{ padding: '1.25rem', background: 'radial-gradient(circle at 0% 0%, rgba(14, 165, 233, 0.1) 0%, transparent 70%), #090d16', borderRadius: '12px', border: '1px solid rgba(14, 165, 233, 0.25)' }}>
-            <button className="primary-button" type="submit" disabled={loading} style={{ fontSize: '1rem', padding: '1rem' }}>
+          <div style={{ padding: '1.6rem', background: 'linear-gradient(135deg, #EAF7EC 0%, #F4FAF4 100%)', borderRadius: '16px', border: '1px solid rgba(46, 159, 69, 0.35)' }}>
+            <button className="primary-button" type="submit" disabled={loading} style={{ fontSize: '1.05rem', padding: '1.15rem', width: '100%' }}>
               {loading ? (
-                <LoadingSpinner size={18} label="Agent Orchestrator Executing Tools..." />
+                <LoadingSpinner size={20} label="Agent Orchestrator Executing Tools..." />
               ) : (
                 <>
                   Analyze Microclimate Risk
-                  <ArrowRight size={18} />
+                  <ArrowRight size={20} />
                 </>
               )}
             </button>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'center', marginTop: '0.75rem', fontSize: '0.78rem', color: '#94a3b8' }}>
-              <ShieldCheck size={14} color="#10b981" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', justifyContent: 'center', marginTop: '0.95rem', fontSize: '0.825rem', color: '#617064' }}>
+              <ShieldCheck size={16} color="#2E9F45" />
               <span>The agent will automatically sequence Geocoding, RAG, FortyGuard, and NASA POWER tools.</span>
             </div>
           </div>
@@ -179,3 +170,4 @@ export function AnalyzePage({
 }
 
 export default AnalyzePage;
+

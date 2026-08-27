@@ -3,15 +3,12 @@ import { Wifi, WifiOff, Loader2 } from 'lucide-react';
 
 /**
  * StatusPill component to visually display API connection status.
- *
- * @param {Object} props
- * @param {'connected'|'disconnected'|'checking'} props.status
  */
 export function StatusPill({ status = 'connected' }) {
   if (status === 'checking') {
     return (
-      <div className="status-pill insufficient" aria-live="polite">
-        <Loader2 size={12} className="spin-icon" />
+      <div className="status-pill checking" aria-live="polite">
+        <Loader2 size={13} className="spin-icon" style={{ animation: 'spin 1s linear infinite' }} />
         Checking API...
       </div>
     );
@@ -19,19 +16,20 @@ export function StatusPill({ status = 'connected' }) {
 
   if (status === 'disconnected') {
     return (
-      <div className="status-pill high-risk" aria-live="polite">
-        <WifiOff size={12} />
-        API Disconnected
+      <div className="status-pill offline" aria-live="polite">
+        <WifiOff size={13} />
+        API Offline
       </div>
     );
   }
 
   return (
     <div className="status-pill online" aria-live="polite">
-      <Wifi size={12} />
+      <Wifi size={13} />
       API Connected
     </div>
   );
 }
 
 export default StatusPill;
+

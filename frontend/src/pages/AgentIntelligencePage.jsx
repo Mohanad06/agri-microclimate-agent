@@ -1,11 +1,9 @@
 import React from 'react';
-import { Bot, Cpu, Layers, ShieldCheck, Database, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Bot, ShieldCheck, ArrowRight } from 'lucide-react';
 
 /**
  * AgentIntelligencePage component illustrating agent architecture and safety gates.
- *
- * @param {Object} props
- * @param {Function} props.onNavigate
+ * Reverse-Engineered Light-First Commercial AgriTech visual language.
  */
 export function AgentIntelligencePage({ onNavigate }) {
   const steps = [
@@ -66,39 +64,37 @@ export function AgentIntelligencePage({ onNavigate }) {
   ];
 
   return (
-    <div className="agent-page" style={{ maxWidth: '960px', margin: '0 auto' }}>
-      <div className="card glass-card" style={{ marginBottom: '2rem' }}>
-        <div className="section-header" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '1rem', marginBottom: '1.25rem' }}>
+    <div className="agent-page" style={{ maxWidth: '1020px', margin: '0 auto' }}>
+      <div className="card" style={{ background: '#FFFFFF', marginBottom: '2.5rem', padding: '2rem' }}>
+        <div className="section-header" style={{ borderBottom: '1px solid #E2E8E2', paddingBottom: '1.25rem', marginBottom: '1.75rem' }}>
           <div>
-            <h2 className="hero-title" style={{ fontSize: '1.3rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <Bot size={24} color="#a855f7" />
+            <h2 className="hero-title" style={{ fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: '0.65rem', color: '#17301F' }}>
+              <Bot size={28} color="#2E9F45" />
               Autonomous Agentic Orchestration Architecture
             </h2>
-            <p style={{ color: '#94a3b8', fontSize: '0.875rem', margin: '0.25rem 0 0 0' }}>
+            <p style={{ color: '#617064', fontSize: '0.9rem', margin: '0.35rem 0 0 0' }}>
               How the Agri Microclimate Agent converts natural language goals into explainable, citation-backed agricultural decisions.
             </p>
           </div>
-          <span className="badge" style={{ background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc', borderColor: 'rgba(168, 85, 247, 0.3)' }}>
-            System Architecture
-          </span>
+          <span className="badge">System Architecture</span>
         </div>
 
         {/* Visual Pipeline Flow */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))', gap: '1.35rem' }}>
           {steps.map((step, idx) => (
-            <div key={idx} className="card" style={{ background: '#090d16', padding: '1.25rem', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span className="badge" style={{ background: '#a855f7', color: '#ffffff', fontWeight: 800 }}>
+            <div key={idx} className="card" style={{ background: '#F4FAF4', padding: '1.35rem', border: '1px solid #E2E8E2' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                <span className="badge" style={{ background: '#2E9F45', color: '#FFFFFF', fontWeight: 800 }}>
                   {step.num}
                 </span>
-                <span className="badge" style={{ color: '#c084fc', borderColor: 'rgba(168, 85, 247, 0.3)' }}>
+                <span className="badge" style={{ color: '#176B35', borderColor: 'rgba(46, 159, 69, 0.3)' }}>
                   {step.badge}
                 </span>
               </div>
-              <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#f8fafc', marginBottom: '0.35rem' }}>
+              <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#17301F', marginBottom: '0.45rem' }}>
                 {step.title}
               </h4>
-              <p style={{ fontSize: '0.825rem', color: '#94a3b8', lineHeight: 1.5, margin: 0 }}>
+              <p style={{ fontSize: '0.875rem', color: '#617064', lineHeight: 1.6, margin: 0 }}>
                 {step.description}
               </p>
             </div>
@@ -107,30 +103,30 @@ export function AgentIntelligencePage({ onNavigate }) {
       </div>
 
       {/* Data Authority & Non-Hallucination Gate */}
-      <div className="card glass-card" style={{ marginBottom: '2rem' }}>
-        <div className="section-header">
+      <div className="card" style={{ background: '#FFFFFF', marginBottom: '2.5rem', padding: '2rem' }}>
+        <div className="section-header" style={{ marginBottom: '1rem' }}>
           <h3 className="section-title">
-            <ShieldCheck size={20} color="#10b981" />
+            <ShieldCheck size={24} color="#2E9F45" />
             Data Source Boundaries & Non-Hallucination Gate
           </h3>
         </div>
 
-        <p style={{ fontSize: '0.9rem', color: '#94a3b8', lineHeight: 1.6, marginBottom: '1.25rem' }}>
+        <p style={{ fontSize: '0.95rem', color: '#617064', lineHeight: 1.65, marginBottom: '1.5rem' }}>
           The agent enforces strict separation between static RAG knowledge and dynamic environmental measurements. If no runtime observation is available to evaluate against retrieved thresholds, the <strong>Evidence Sufficiency Gate</strong> returns <code>INSUFFICIENT_EVIDENCE</code> rather than hallucinating speculative risk levels.
         </p>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {dataBoundaries.map((b, idx) => (
-            <div key={idx} style={{ padding: '1rem', background: '#090d16', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.07)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                <span style={{ fontSize: '0.925rem', fontWeight: 700, color: '#f8fafc' }}>
+            <div key={idx} style={{ padding: '1.25rem', background: '#F4FAF4', borderRadius: '14px', border: '1px solid #E2E8E2' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <span style={{ fontSize: '1rem', fontWeight: 800, color: '#17301F' }}>
                   {b.source}
                 </span>
-                <span className="badge" style={{ color: '#34d399', borderColor: 'rgba(16, 185, 129, 0.3)' }}>
+                <span className="badge" style={{ color: '#176B35', borderColor: 'rgba(46, 159, 69, 0.3)' }}>
                   {b.role}
                 </span>
               </div>
-              <p style={{ fontSize: '0.825rem', color: '#94a3b8', margin: 0 }}>
+              <p style={{ fontSize: '0.875rem', color: '#617064', margin: 0, lineHeight: 1.55 }}>
                 {b.description}
               </p>
             </div>
@@ -138,14 +134,14 @@ export function AgentIntelligencePage({ onNavigate }) {
         </div>
       </div>
 
-      <div style={{ textAlign: 'center' }}>
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <button
           className="primary-button"
           onClick={() => onNavigate('/analyze')}
-          style={{ width: 'auto', display: 'inline-flex', padding: '0.85rem 2rem' }}
+          style={{ width: 'auto', display: 'inline-flex', padding: '0.95rem 2.5rem' }}
         >
           Run Microclimate Analysis
-          <ArrowRight size={18} />
+          <ArrowRight size={20} />
         </button>
       </div>
     </div>
@@ -153,3 +149,4 @@ export function AgentIntelligencePage({ onNavigate }) {
 }
 
 export default AgentIntelligencePage;
+
