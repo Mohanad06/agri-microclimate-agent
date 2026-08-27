@@ -44,12 +44,14 @@ class FortyGuardClient:
         base_url: str | None = None,
         timeout: float = 60.0,
     ) -> None:
-        self.api_key = api_key or os.getenv("FORTYGUARD_API_KEY")
+        raw_key = api_key or os.getenv("FORTYGUARD_API_KEY") or ""
+        self.api_key = raw_key.strip().strip('"').strip("'")
         if not self.api_key:
             raise FortyGuardError(
                 "No API key provided. Pass api_key=... or set FORTYGUARD_API_KEY in your .env file."
             )
-        self.base_url = (base_url or os.getenv("FORTYGUARD_BASE_URL") or DEFAULT_BASE_URL).rstrip("/")
+        raw_url = base_url or os.getenv("FORTYGUARD_BASE_URL") or DEFAULT_BASE_URL
+        self.base_url = raw_url.strip().strip('"').strip("'").rstrip("/")
         self.timeout = timeout
         self._session = requests.Session()
         self._session.headers.update(
