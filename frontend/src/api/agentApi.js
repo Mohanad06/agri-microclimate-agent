@@ -8,14 +8,9 @@ import axios from 'axios';
 
 // ── 1. Base URL Resolution & Safety Check ────────────────────────────────────
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-if (!BASE_URL) {
-  throw new Error(
-    '[AgriAgent API Error] VITE_API_BASE_URL environment variable is missing. ' +
-    'Please ensure frontend/.env contains VITE_API_BASE_URL (e.g. http://127.0.0.1:8000).'
-  );
-}
+const BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  (typeof window !== 'undefined' ? window.location.origin : 'http://127.0.0.1:8000');
 
 // ── 2. Axios Instance Configuration ──────────────────────────────────────────
 
