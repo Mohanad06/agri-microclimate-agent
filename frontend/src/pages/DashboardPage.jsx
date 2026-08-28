@@ -190,7 +190,7 @@ export function DashboardPage({ onNavigate }) {
           </span> */}
         </div>
 
-        <div className="metrics-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', transformStyle: 'preserve-3d' }}>
+        <div className="metrics-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))' }}>
           {crops.map((crop, idx) => {
             const isFlipped = flippedCardIndex === idx;
             return (

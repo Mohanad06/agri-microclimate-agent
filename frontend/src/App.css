@@ -282,13 +282,9 @@
 
 .flip-card-container {
   perspective: 900px;
+  -webkit-perspective: 900px;
   height: 295px;
   cursor: pointer;
-  /*
-    overflow: clip clips the scrollbar visually within the card boundaries.
-    Unlike overflow: hidden, overflow: clip does NOT create a stacking context,
-    so it does NOT break transform-style: preserve-3d on the child.
-  */
   overflow: clip;
 }
 
@@ -296,15 +292,19 @@
   position: relative;
   width: 100%;
   height: 100%;
-  /* The actual rotation happens here */
   transition: transform 0.7s ease-in-out;
+  -webkit-transition: -webkit-transform 0.7s ease-in-out;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   border-radius: var(--radius-lg);
+  /* Isolate this element so no ancestor stacking context can interfere */
+  will-change: transform;
 }
 
 .flip-card-container:hover .flip-card-inner,
 .flip-card-container.is-flipped .flip-card-inner {
   transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
 }
 
 .flip-card-front,
@@ -316,7 +316,6 @@
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   border-radius: var(--radius-lg);
-  /* overflow:hidden here is safe — it is on the face, not on the rotating parent */
   overflow: hidden;
   box-sizing: border-box;
   background: #022C22;
@@ -327,13 +326,13 @@
 }
 
 .flip-card-front {
-  /* Front starts at 0 — facing viewer */
   transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
 }
 
 .flip-card-back {
-  /* Back starts already rotated 180 — hidden behind front */
   transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
   padding: 1.25rem;
   background: #011E17;
   border: 1.5px solid var(--primary-green);
