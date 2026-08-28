@@ -32,7 +32,7 @@ export function Header({ apiStatus = 'connected', currentPath = '/', onNavigate 
             className={`nav-link ${currentPath === '/' ? 'active' : ''}`}
             onClick={() => onNavigate && onNavigate('/')}
           >
-            Dashboard
+            Home
           </button>
 
           <button

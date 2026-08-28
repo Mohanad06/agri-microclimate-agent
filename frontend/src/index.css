@@ -135,3 +135,22 @@ body {
   }
 }
 
+/* High Contrast Inputs & Forms System */
+input, select, textarea, button {
+  color-scheme: dark;
+}
+
+input, select, textarea {
+  color: #FFFFFF !important;
+}
+
+input::placeholder, select::placeholder, textarea::placeholder {
+  color: #94A3B8 !important;
+  opacity: 0.8;
+}
+
+option {
+  background-color: #0A2018 !important;
+  color: #FFFFFF !important;
+}
+
