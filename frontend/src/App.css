@@ -61,6 +61,16 @@
   animation: agriFadeInUp 0.65s cubic-bezier(0.25, 1, 0.5, 1) both;
 }
 
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #FFFFFF !important;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0;
+}
+
 /* ── App Shell & Core Layout ───────────────────────────────────────────── */
 
 .app-shell {
@@ -659,26 +669,57 @@
   box-shadow: 0 0 0 3px rgba(46, 159, 69, 0.15);
 }
 
-/* ── Responsive Layout Overrides ─────────────────────────────────────────── */
+/* ── Responsive Layout Overrides (Phone & Tablet Responsive System) ── */
 
 @media (max-width: 980px) {
   .hero-banner {
     padding: 2rem;
   }
+  .page-container {
+    padding: 1rem 1.25rem;
+  }
 }
 
 @media (max-width: 768px) {
+  .topbar {
+    height: auto;
+    padding: 0.75rem 0;
+  }
+
   .topbar-content {
-    padding: 0 1rem;
+    padding: 0 0.85rem;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  .brand-container {
+    justify-content: space-between;
+    width: 100%;
   }
 
   .brand-text span.brand-subtitle {
     display: none;
   }
 
+  .nav-links {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 0.25rem;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+  }
+
+  .nav-link {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.85rem;
+  }
+
   .hero-banner {
     grid-template-columns: 1fr !important;
     gap: 1.5rem !important;
+    padding: 1.5rem 1.15rem !important;
   }
 
   .coord-inputs-row {
@@ -686,7 +727,46 @@
     align-items: stretch;
   }
 
-  .metrics-grid {
-    grid-template-columns: 1fr;
+  .metrics-grid,
+  .features-grid,
+  .crops-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* Prevent iOS Safari input auto-zoom */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .modal-container {
+    width: 94vw !important;
+    max-height: 85vh !important;
+    padding: 1.25rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-banner h1 {
+    font-size: 1.6rem !important;
+  }
+
+  .hero-banner p {
+    font-size: 0.9rem !important;
+  }
+
+  .card {
+    padding: 1.15rem !important;
+  }
+
+  .status-pill {
+    font-size: 0.725rem;
+    padding: 0.35rem 0.65rem;
   }
 }
