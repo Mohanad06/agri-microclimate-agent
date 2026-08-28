@@ -86,14 +86,14 @@ function formatMetricDisplay(item) {
 export function FindingsGrid({ findings = [] }) {
   if (!findings || findings.length === 0) {
     return (
-      <div className="card" style={{ background: '#FFFFFF' }}>
+      <div className="card" style={{ background: 'var(--surface-card, linear-gradient(135deg, rgba(20, 56, 45, 0.88) 0%, rgba(10, 32, 25, 0.92) 100%))', border: '1px solid var(--border-color)', padding: '1.75rem' }}>
         <div className="section-header">
-          <h3 className="section-title">
-            <Thermometer size={20} color="#2E9F45" />
+          <h3 className="section-title" style={{ color: '#FFFFFF', fontWeight: 800, fontSize: '1.15rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <Thermometer size={20} color="#34D399" />
             Environmental Observations
           </h3>
         </div>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', fontStyle: 'italic' }}>
+        <p style={{ color: 'var(--text-muted, #94A3B8)', fontSize: '0.875rem', fontStyle: 'italic' }}>
           No environmental observations available for this query.
         </p>
       </div>
@@ -101,17 +101,17 @@ export function FindingsGrid({ findings = [] }) {
   }
 
   return (
-    <div className="card" style={{ background: '#FFFFFF' }}>
+    <div className="card" style={{ background: 'var(--surface-card, linear-gradient(135deg, rgba(20, 56, 45, 0.88) 0%, rgba(10, 32, 25, 0.92) 100%))', border: '1px solid var(--border-color)', padding: '1.75rem' }}>
       <div className="section-header">
-        <h3 className="section-title">
-          <Thermometer size={20} color="#2E9F45" />
+        <h3 className="section-title" style={{ color: '#FFFFFF', fontWeight: 800, fontSize: '1.15rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <Thermometer size={20} color="#34D399" />
           Environmental Observations
         </h3>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span className="badge">
+          {/* <span className="badge">
             21st.dev UI #24337
-          </span>
-          <span className="status-pill online">{findings.length} Metrics</span>
+          </span> */}
+          {/* <span className="status-pill online">{findings.length} Metrics</span> */}
         </div>
       </div>
 

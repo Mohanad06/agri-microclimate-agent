@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import useAgent from './hooks/useAgent.js';
 import Header from './components/common/Header.jsx';
 import BrandIntro from './components/common/BrandIntro.jsx';
-import RealWhiteBrushBackground from './components/common/RealWhiteBrushBackground.jsx';
+import AgroLeafBackground from './components/common/AgroLeafBackground.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import AnalyzePage from './pages/AnalyzePage.jsx';
 import ResultsPage from './pages/ResultsPage.jsx';
@@ -75,8 +75,8 @@ function App() {
 
   return (
     <div className="app-shell">
-      {/* Real White Brush Aesthetic — Authentic Paint Wipe & Splatters */}
-      <RealWhiteBrushBackground />
+      {/* Agro Leaf Aesthetic — Deep Emerald Canvas with Organic Vector Curves & Bio-Geometry */}
+      <AgroLeafBackground />
 
       {/* Animated Brand Splash Intro with progress bar */}
       <BrandIntro key={introKey} />

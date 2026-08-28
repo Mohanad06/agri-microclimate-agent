@@ -65,9 +65,9 @@ export function ResultsPage({
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span className="badge" style={{ background: 'var(--light-green)', color: 'var(--primary-green)', borderColor: 'var(--border-color)', padding: '0.4rem 0.85rem' }}>
+          {/* <span className="badge" style={{ background: 'var(--light-green)', color: 'var(--primary-green)', borderColor: 'var(--border-color)', padding: '0.4rem 0.85rem' }}>
             Verified Decision Report
-          </span>
+          </span> */}
         </div>
       </div>
 
