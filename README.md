@@ -1,6 +1,6 @@
-# Agri Microclimate Agent — FortyGuard Hackathon '26 Finalist Project
+# Agri Microclimate Agent — FortyGuard Hackathon '26
 
-[![FortyGuard Hackathon '26](https://img.shields.io/badge/FortyGuard%20Hackathon-'26%20Finalist-2E9F45?style=for-the-badge&logo=sprout)](https://api.fortyguard.com)
+[![FortyGuard Hackathon '26](https://img.shields.io/badge/FortyGuard%20Hackathon-'26%20Submission-2E9F45?style=for-the-badge&logo=sprout)](https://api.fortyguard.com)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-176B35?style=for-the-badge&logo=python)](https://www.python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110.0-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
 [![React + Vite](https://img.shields.io/badge/React-18.2--Vite-61DAFB?style=for-the-badge&logo=react)](https://vitejs.dev)
@@ -13,7 +13,7 @@
 ## 🌟 Key Platform Features
 
 ### 1. Multi-Source Environmental Data Fusion
-- **FortyGuard Thermal API**: Parcel-scale (60m–100m tile resolution) thermal surface heatmaps, measuring daily mean, peak exceedances, and thermal persistence statistics over 30-mile urban & agricultural areas.
+- **FortyGuard Thermal API**: Parcel-scale (60m–100m tile resolution) thermal surface heatmaps, measuring daily mean, peak exceedances, and thermal persistence statistics over a ~7 km × 7 km field AOI automatically generated around the user's pinned farm location.
 - **NASA POWER Satellite Climatology**: Daily precipitation (`PRECTOTCORR`), root-zone soil wetness index (`GWETROOT`), and relative humidity (`RH2M`) for deep moisture and drought context.
 - **US Census Geocoder**: Lightweight, high-reliability geocoding service converting city/address locations into exact field latitude/longitude coordinates.
 
@@ -65,13 +65,34 @@ This project adheres strictly to **FortyGuard Intellectual Property & Data Licen
    Below is a sample request payload and redacted response shape illustrating the client integration:
 
 ```json
-// POST /v1/thermal/analysis
+// POST /v1/heatmap
 // Header: api-key: fg_live_xxxxxxxxxxxxxxxx
+// Content-Type: application/json
 {
-  "latitude": 37.3352,
-  "longitude": -121.8811,
-  "radius_km": 1.5,
-  "metrics": ["mean_temp", "peak_exceedance", "persistence_index"]
+  "polygon_aoi": {
+    "type": "FeatureCollection",
+    "features": [{
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-112.074, 33.448],
+          [-112.060, 33.448],
+          [-112.060, 33.458],
+          [-112.074, 33.458],
+          [-112.074, 33.448]
+        ]]
+      }
+    }]
+  },
+  "date_time": {
+    "start_date": "2025-07-15",
+    "start_time": "14:00",
+    "filter_type": 1
+  },
+  "granularity": 100,
+  "analytic_type": "tcm"
 }
 
 // Response (Redacted/Sample Payload for Documentation)
@@ -79,11 +100,14 @@ This project adheres strictly to **FortyGuard Intellectual Property & Data Licen
   "status": "completed",
   "activity_id": "act_sample_789412",
   "result": {
-    "parcel_id": "diridon_zone_01",
-    "mean_surface_temp_c": 38.4,
-    "peak_heat_duration_hours": 6.5,
-    "thermal_persistence_score": 0.82,
-    "spatial_resolution_m": 60
+    "stats_data": {
+      "analytic_type": "tcm",
+      "mean": 38.4,
+      "min": 35.2,
+      "max": 42.1,
+      "n_cells": 847,
+      "units": "fahrenheit"
+    }
   }
 }
 ```
